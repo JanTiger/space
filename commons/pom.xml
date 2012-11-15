@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.jan.common</groupId>
+  <artifactId>commons</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <name>commons</name>
+  <url>http://maven.apache.org</url>
+  <inceptionYear>2012</inceptionYear>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven-repository-username>Jan</maven-repository-username>
+	<maven-repository-host>127.0.0.1</maven-repository-host>
+	<maven-repository-url>http://${maven-repository-host}:9001/maven</maven-repository-url>
+  </properties>
+
+  <developers>
+    <developer>
+		<id>jan</id>
+		<name>Jan Wong</name>
+		<email>janiswj@gmail.com</email>
+		<organization>Tiger</organization>
+	</developer>
+  </developers>
+  
+  <organization>
+	<name>Tiger</name>
+  </organization>
+  
+  <repositories>
+    <repository>
+		<id>maven</id>
+		  <url>${maven-repository-url}/content/groups/public/</url>
+		</repository>
+  </repositories>
+  
+  <distributionManagement>
+    <repository>
+        <id>tiger.releases</id>
+        <name>Tiger Release Repository</name>
+        <url>${maven-repository-url}/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>tiger.snapshots</id>
+      <name>Tiger Snapshot Repository</name>
+      <url>${maven-repository-url}/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+  
+</project>
