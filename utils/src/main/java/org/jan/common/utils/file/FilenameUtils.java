@@ -60,22 +60,20 @@ import java.util.Stack;
  * Both prefix styles are matched always, irrespective of the machine that you are
  * currently running on.
  * <p>
- * Origin of code: Excalibur, Alexandria, Tomcat, Commons-Utils.
  *
- * @version $Id: FilenameUtils.java 1307462 2012-03-30 15:13:11Z ggregory $
- * @since 1.1
+ * @since 1.0
  */
 public class FilenameUtils {
 
     /**
      * The extension separator character.
-     * @since 1.4
+     * @since 1.0
      */
     public static final char EXTENSION_SEPARATOR = '.';
 
     /**
      * The extension separator String.
-     * @since 1.4
+     * @since 1.0
      */
     public static final String EXTENSION_SEPARATOR_STR = Character.toString(EXTENSION_SEPARATOR);
 
@@ -220,7 +218,7 @@ public class FilenameUtils {
      * @param unixSeparator {@code true} if a unix separator should
      * be used or {@code false} if a windows separator should be used.
      * @return the normalized filename, or null if invalid
-     * @since 2.0
+     * @since 1.0
      */
     public static String normalize(String filename, boolean unixSeparator) {
         char separator = unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR;
@@ -314,7 +312,7 @@ public class FilenameUtils {
      * @param unixSeparator {@code true} if a unix separator should
      * be used or {@code false} if a windows separtor should be used.
      * @return the normalized filename, or null if invalid
-     * @since 2.0
+     * @since 1.0
      */
     public static String normalizeNoEndSeparator(String filename, boolean unixSeparator) {
          char separator = unixSeparator ? UNIX_SEPARATOR : WINDOWS_SEPARATOR;
@@ -506,7 +504,7 @@ public class FilenameUtils {
      * @return true is the candidate leaf is under by the specified composite. False otherwise.
      * @throws IOException
      *             if an IO error occurs while checking the files.
-     * @since 2.2
+     * @since 1.0
      * @see FileUtils#directoryContains(File, File)
      */
     public static boolean directoryContains(final String canonicalParent, final String canonicalChild)
@@ -1092,7 +1090,7 @@ public class FilenameUtils {
      * @param normalized  whether to normalize the filenames
      * @param caseSensitivity  what case sensitivity rule to use, null means case-sensitive
      * @return true if the filenames are equal, null equals null
-     * @since 1.3
+     * @since 1.0
      */
     public static boolean equals(
             String filename1, String filename2,
@@ -1257,7 +1255,7 @@ public class FilenameUtils {
      * @param wildcardMatcher  the wildcard string to match against
      * @param caseSensitivity  what case sensitivity rule to use, null means case-sensitive
      * @return true if the filename matches the wilcard string
-     * @since 1.3
+     * @since 1.0
      */
     public static boolean wildcardMatch(String filename, String wildcardMatcher, IOCase caseSensitivity) {
         if (filename == null && wildcardMatcher == null) {
@@ -1563,7 +1561,7 @@ class IOCase implements Serializable {
      * @return the first index of the search String,
      *  -1 if no match or {@code null} string input
      * @throws NullPointerException if either string is null
-     * @since 2.0
+     * @since 1.0
      */
     public int checkIndexOf(String str, int strStartIndex, String search) {
         int endIndex = str.length() - search.length();

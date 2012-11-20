@@ -31,10 +31,9 @@ import java.nio.charset.UnsupportedCharsetException;
  * </ul>
  *
  * @see <a href="http://docs.oracle.com/javase/6/docs/api/java/nio/charset/Charset.html">Standard charsets</a>
- * @since 2.3
- * @version $Id: Charsets.java 1311751 2012-04-10 14:26:21Z ggregory $
+ * @since 1.0
  */
-public class Charsets {
+public class CharsetUtils {
     //
     // This class should only contain Charset instances for required encodings. This guarantees that it will load
     // correctly and without delay on all Java platforms.

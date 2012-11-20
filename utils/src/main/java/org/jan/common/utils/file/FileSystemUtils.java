@@ -25,8 +25,7 @@ import org.jan.common.utils.io.IOUtils;
  * <li>Get the free space on a drive
  * </ul>
  *
- * @version $Id: FileSystemUtils.java 1304052 2012-03-22 20:55:29Z ggregory $
- * @since 1.1
+ * @since 1.0
  */
 public class FileSystemUtils {
 
@@ -119,7 +118,7 @@ public class FileSystemUtils {
      * @throws IllegalArgumentException if the path is invalid
      * @throws IllegalStateException if an error occurred in initialisation
      * @throws IOException if an error occurs when finding the free space
-     * @since 1.2, enhanced OS support in 1.3
+     * @since 1.0, enhanced OS support in 1.0
      */
     public static long freeSpaceKb(String path) throws IOException {
         return freeSpaceKb(path, -1);
@@ -148,7 +147,7 @@ public class FileSystemUtils {
      * @throws IllegalArgumentException if the path is invalid
      * @throws IllegalStateException if an error occurred in initialisation
      * @throws IOException if an error occurs when finding the free space
-     * @since 2.0
+     * @since 1.0
      */
     public static long freeSpaceKb(String path, long timeout) throws IOException {
         return INSTANCE.freeSpaceOS(path, OS, true, timeout);
@@ -164,7 +163,7 @@ public class FileSystemUtils {
      * @return the amount of free drive space on the drive or volume in kilobytes
      * @throws IllegalStateException if an error occurred in initialisation
      * @throws IOException if an error occurs when finding the free space
-     * @since 2.0
+     * @since 1.0
      */
     public static long freeSpaceKb() throws IOException {
         return freeSpaceKb(-1);
@@ -182,7 +181,7 @@ public class FileSystemUtils {
      * @return the amount of free drive space on the drive or volume in kilobytes
      * @throws IllegalStateException if an error occurred in initialisation
      * @throws IOException if an error occurs when finding the free space
-     * @since 2.0
+     * @since 1.0
      */
     public static long freeSpaceKb(long timeout) throws IOException {
         return freeSpaceKb(new File(".").getAbsolutePath(), timeout);
