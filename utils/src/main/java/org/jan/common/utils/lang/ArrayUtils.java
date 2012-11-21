@@ -40,7 +40,7 @@ public class ArrayUtils {
     /**
      * An empty immutable <code>Class</code> array.
      */
-    public static final Class[] EMPTY_CLASS_ARRAY = new Class[0];
+    public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class[0];
     /**
      * An empty immutable <code>String</code> array.
      */
@@ -222,15 +222,15 @@ public class ArrayUtils {
      * @throws IllegalArgumentException  if the array contains elements other
      *  than {@link java.util.Map.Entry} and an Array
      */
-    public static Map toMap(Object[] array) {
+    public static Map<Object, Object> toMap(Object[] array) {
         if (array == null) {
             return null;
         }
-        final Map map = new HashMap((int) (array.length * 1.5));
+        final Map<Object, Object> map = new HashMap<Object, Object>((int) (array.length * 1.5));
         for (int i = 0; i < array.length; i++) {
             Object object = array[i];
-            if (object instanceof Map.Entry) {
-                Map.Entry entry = (Map.Entry) object;
+            if (object instanceof Map.Entry<?, ?>) {
+                Map.Entry<?,?> entry = (Map.Entry<?,?>) object;
                 map.put(entry.getKey(), entry.getValue());
             } else if (object instanceof Object[]) {
                 Object[] entry = (Object[]) object;
@@ -249,6 +249,49 @@ public class ArrayUtils {
         return map;
     }
 
+ // Generic array
+    //-----------------------------------------------------------------------
+    /**
+     * <p>Create a type-safe generic array.</p>
+     *
+     * <p>The Java language does not allow an array to be created from a generic type:</p>
+     *
+     * <pre>
+    public static &lt;T&gt; T[] createAnArray(int size) {
+        return new T[size]; // compiler error here
+    }
+    public static &lt;T&gt; T[] createAnArray(int size) {
+        return (T[])new Object[size]; // ClassCastException at runtime
+    }
+     * </pre>
+     *
+     * <p>Therefore new arrays of generic types can be created with this method.
+     * For example, an array of Strings can be created:</p>
+     *
+     * <pre>
+    String[] array = ArrayUtils.toArray("1", "2");
+    String[] emptyArray = ArrayUtils.&lt;String&gt;toArray();
+     * </pre>
+     *
+     * <p>The method is typically used in scenarios, where the caller itself uses generic types
+     * that have to be combined into an array.</p>
+     *
+     * <p>Note, this method makes only sense to provide arguments of the same type so that the
+     * compiler can deduce the type of the array itself. While it is possible to select the
+     * type explicitly like in
+     * <code>Number[] array = ArrayUtils.&lt;Number&gt;toArray(Integer.valueOf(42), Double.valueOf(Math.PI))</code>,
+     * there is no real advantage when compared to
+     * <code>new Number[] {Integer.valueOf(42), Double.valueOf(Math.PI)}</code>.</p>
+     *
+     * @param  <T>   the array's element type
+     * @param  items  the varargs array items, null allowed
+     * @return the array, not null unless a null array is passed in
+     * @since  3.0
+     */
+    public static <T> T[] toArray(final T... items) {
+        return items;
+    }
+
     // Clone
     //-----------------------------------------------------------------------
     /**
@@ -263,11 +306,11 @@ public class ArrayUtils {
      * @param array  the array to shallow clone, may be <code>null</code>
      * @return the cloned array, <code>null</code> if <code>null</code> input
      */
-    public static Object[] clone(Object[] array) {
+    public static <T> T[] clone(T[] array) {
         if (array == null) {
             return null;
         }
-        return (Object[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -283,7 +326,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (long[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -299,7 +342,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (int[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -315,7 +358,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (short[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -331,7 +374,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (char[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -347,7 +390,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (byte[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -363,7 +406,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (double[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -379,7 +422,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (float[]) array.clone();
+        return array.clone();
     }
 
     /**
@@ -395,7 +438,7 @@ public class ArrayUtils {
         if (array == null) {
             return null;
         }
-        return (boolean[]) array.clone();
+        return array.clone();
     }
 
     // nullToEmpty
@@ -789,7 +832,7 @@ public class ArrayUtils {
      *      the start and end indices.
      * @since 1.0
      */
-    public static Object[] subarray(Object[] array, int startIndexInclusive, int endIndexExclusive) {
+    public static <T> T[] subarray(T[] array, int startIndexInclusive, int endIndexExclusive) {
         if (array == null) {
             return null;
         }
@@ -800,11 +843,14 @@ public class ArrayUtils {
             endIndexExclusive = array.length;
         }
         int newSize = endIndexExclusive - startIndexInclusive;
-        Class type = array.getClass().getComponentType();
+        Class<?> type = array.getClass().getComponentType();
         if (newSize <= 0) {
-            return (Object[]) Array.newInstance(type, 0);
+            @SuppressWarnings("unchecked") // OK, because array is of type T
+            final T[] emptyArray = (T[]) Array.newInstance(type, 0);
+            return emptyArray;
         }
-        Object[] subarray = (Object[]) Array.newInstance(type, newSize);
+        @SuppressWarnings("unchecked") // OK, because array is of type T
+        T[] subarray = (T[]) Array.newInstance(type, newSize);
         System.arraycopy(array, startIndexInclusive, subarray, 0, newSize);
         return subarray;
     }
@@ -2682,7 +2728,7 @@ public class ArrayUtils {
         }
         final Character[] result = new Character[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Character(array[i]);
+            result[i] = Character.valueOf(array[i]);
         }
         return result;
      }
@@ -2750,7 +2796,7 @@ public class ArrayUtils {
         }
         final Long[] result = new Long[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Long(array[i]);
+            result[i] = Long.valueOf(array[i]);
         }
         return result;
     }
@@ -2818,7 +2864,7 @@ public class ArrayUtils {
         }
         final Integer[] result = new Integer[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Integer(array[i]);
+            result[i] = Integer.valueOf(array[i]);
         }
         return result;
     }
@@ -2886,7 +2932,7 @@ public class ArrayUtils {
         }
         final Short[] result = new Short[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Short(array[i]);
+            result[i] = Short.valueOf(array[i]);
         }
         return result;
     }
@@ -2954,7 +3000,7 @@ public class ArrayUtils {
         }
         final Byte[] result = new Byte[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Byte(array[i]);
+            result[i] = Byte.valueOf(array[i]);
         }
         return result;
     }
@@ -3022,7 +3068,7 @@ public class ArrayUtils {
         }
         final Double[] result = new Double[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Double(array[i]);
+            result[i] = Double.valueOf(array[i]);
         }
         return result;
     }
@@ -3090,7 +3136,7 @@ public class ArrayUtils {
         }
         final Float[] result = new Float[array.length];
         for (int i = 0; i < array.length; i++) {
-            result[i] = new Float(array[i]);
+            result[i] = Float.valueOf(array[i]);
         }
         return result;
     }
@@ -3266,12 +3312,13 @@ public class ArrayUtils {
     // ----------------------------------------------------------------------
     /**
      * <p>Checks if an array of Objects is not empty or not <code>null</code>.</p>
+     * @param <T>
      *
      * @param array  the array to test
      * @return <code>true</code> if the array is not empty or not <code>null</code>
      * @since 1.0
      */
-     public static boolean isNotEmpty(Object[] array) {
+     public static <T> boolean isNotEmpty(T[] array) {
          return (array != null && array.length != 0);
      }
 
@@ -3386,14 +3433,15 @@ public class ArrayUtils {
      * @since 1.0
      * @throws IllegalArgumentException if the array types are incompatible
      */
-    public static Object[] addAll(Object[] array1, Object[] array2) {
+    public static <T> T[] addAll(T[] array1, T... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
             return clone(array1);
         }
-        Object[] joinedArray = (Object[]) Array.newInstance(array1.getClass().getComponentType(),
-                                                            array1.length + array2.length);
+        final Class<?> type1 = array1.getClass().getComponentType();
+        @SuppressWarnings("unchecked") // OK, because array is of type T
+        T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
         System.arraycopy(array1, 0, joinedArray, 0, array1.length);
         try {
             System.arraycopy(array2, 0, joinedArray, array1.length, array2.length);
@@ -3404,10 +3452,10 @@ public class ArrayUtils {
              * - it would be a wasted check most of the time
              * - safer, in case check turns out to be too strict
              */
-            final Class type1 = array1.getClass().getComponentType();
-            final Class type2 = array2.getClass().getComponentType();
+            final Class<?> type2 = array2.getClass().getComponentType();
             if (!type1.isAssignableFrom(type2)){
-                throw new IllegalArgumentException("Cannot store "+type2.getName()+" in an array of "+type1.getName());
+                throw new IllegalArgumentException("Cannot store "+type2.getName()+" in an array of "
+                        +type1.getName(), ase);
             }
             throw ase; // No, so rethrow original
         }
@@ -3431,7 +3479,7 @@ public class ArrayUtils {
      * @return The new boolean[] array.
      * @since 1.0
      */
-    public static boolean[] addAll(boolean[] array1, boolean[] array2) {
+    public static boolean[] addAll(boolean[] array1, boolean... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3460,7 +3508,7 @@ public class ArrayUtils {
      * @return The new char[] array.
      * @since 1.0
      */
-    public static char[] addAll(char[] array1, char[] array2) {
+    public static char[] addAll(char[] array1, char... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3489,7 +3537,7 @@ public class ArrayUtils {
      * @return The new byte[] array.
      * @since 1.0
      */
-    public static byte[] addAll(byte[] array1, byte[] array2) {
+    public static byte[] addAll(byte[] array1, byte... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3518,7 +3566,7 @@ public class ArrayUtils {
      * @return The new short[] array.
      * @since 1.0
      */
-    public static short[] addAll(short[] array1, short[] array2) {
+    public static short[] addAll(short[] array1, short... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3547,7 +3595,7 @@ public class ArrayUtils {
      * @return The new int[] array.
      * @since 1.0
      */
-    public static int[] addAll(int[] array1, int[] array2) {
+    public static int[] addAll(int[] array1, int... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3576,7 +3624,7 @@ public class ArrayUtils {
      * @return The new long[] array.
      * @since 1.0
      */
-    public static long[] addAll(long[] array1, long[] array2) {
+    public static long[] addAll(long[] array1, long... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3605,7 +3653,7 @@ public class ArrayUtils {
      * @return The new float[] array.
      * @since 1.0
      */
-    public static float[] addAll(float[] array1, float[] array2) {
+    public static float[] addAll(float[] array1, float... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3634,7 +3682,7 @@ public class ArrayUtils {
      * @return The new double[] array.
      * @since 1.0
      */
-    public static double[] addAll(double[] array1, double[] array2) {
+    public static double[] addAll(double[] array1, double... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
@@ -3672,16 +3720,17 @@ public class ArrayUtils {
      * in which case it will have the same type as the element.
      * @since 1.0
      */
-    public static Object[] add(Object[] array, Object element) {
-        Class type;
+    public static <T> T[] add(T[] array, T element) {
+        Class<?> type;
         if (array != null){
             type = array.getClass();
         } else if (element != null) {
             type = element.getClass();
         } else {
-            type = Object.class;
+            throw new IllegalArgumentException("Arguments cannot both be null");
         }
-        Object[] newArray = (Object[]) copyArrayGrow1(array, type);
+        @SuppressWarnings("unchecked") // type must be T
+        T[] newArray = (T[]) copyArrayGrow1(array, type);
         newArray[newArray.length - 1] = element;
         return newArray;
     }
@@ -3911,7 +3960,7 @@ public class ArrayUtils {
      * size 1 array of this type.
      * @return A new copy of the array of size 1 greater than the input.
      */
-    private static Object copyArrayGrow1(Object array, Class newArrayComponentType) {
+    private static Object copyArrayGrow1(Object array, Class<?> newArrayComponentType) {
         if (array != null) {
             int arrayLength = Array.getLength(array);
             Object newArray = Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
@@ -3949,16 +3998,18 @@ public class ArrayUtils {
      * @throws IndexOutOfBoundsException if the index is out of range
      * (index < 0 || index > array.length).
      */
-    public static Object[] add(Object[] array, int index, Object element) {
-        Class clss = null;
+    public static <T> T[] add(T[] array, int index, T element) {
+        Class<?> clss = null;
         if (array != null) {
             clss = array.getClass().getComponentType();
         } else if (element != null) {
             clss = element.getClass();
         } else {
-            return new Object[]{null};
+            throw new IllegalArgumentException("Array and element cannot both be null");
         }
-        return (Object[]) add(array, index, element, clss);
+        @SuppressWarnings("unchecked") // the add method creates an array of type clss, which is type T
+        final T[] newArray = (T[]) add(array, index, element, clss);
+        return newArray;
     }
 
     /**
@@ -3989,7 +4040,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static boolean[] add(boolean[] array, int index, boolean element) {
-        return (boolean[]) add(array, index, BooleanUtils.toBooleanObject(element), Boolean.TYPE);
+        return (boolean[]) add(array, index, Boolean.valueOf(element), Boolean.TYPE);
     }
 
     /**
@@ -4021,7 +4072,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static char[] add(char[] array, int index, char element) {
-        return (char[]) add(array, index, new Character(element), Character.TYPE);
+        return (char[]) add(array, index, Character.valueOf(element), Character.TYPE);
     }
 
     /**
@@ -4052,7 +4103,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static byte[] add(byte[] array, int index, byte element) {
-        return (byte[]) add(array, index, new Byte(element), Byte.TYPE);
+        return (byte[]) add(array, index, Byte.valueOf(element), Byte.TYPE);
     }
 
     /**
@@ -4083,7 +4134,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static short[] add(short[] array, int index, short element) {
-        return (short[]) add(array, index, new Short(element), Short.TYPE);
+        return (short[]) add(array, index, Short.valueOf(element), Short.TYPE);
     }
 
     /**
@@ -4114,7 +4165,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static int[] add(int[] array, int index, int element) {
-        return (int[]) add(array, index, new Integer(element), Integer.TYPE);
+        return (int[]) add(array, index, Integer.valueOf(element), Integer.TYPE);
     }
 
     /**
@@ -4145,7 +4196,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static long[] add(long[] array, int index, long element) {
-        return (long[]) add(array, index, new Long(element), Long.TYPE);
+        return (long[]) add(array, index, Long.valueOf(element), Long.TYPE);
     }
 
     /**
@@ -4176,7 +4227,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static float[] add(float[] array, int index, float element) {
-        return (float[]) add(array, index, new Float(element), Float.TYPE);
+        return (float[]) add(array, index, Float.valueOf(element), Float.TYPE);
     }
 
     /**
@@ -4207,7 +4258,7 @@ public class ArrayUtils {
      * (index < 0 || index > array.length).
      */
     public static double[] add(double[] array, int index, double element) {
-        return (double[]) add(array, index, new Double(element), Double.TYPE);
+        return (double[]) add(array, index, Double.valueOf(element), Double.TYPE);
     }
 
     /**
@@ -4221,7 +4272,7 @@ public class ArrayUtils {
      * @param clss the type of the element being added
      * @return A new array containing the existing elements and the new element
      */
-    private static Object add(Object array, int index, Object element, Class clss) {
+    private static Object add(Object array, int index, Object element, Class<?> clss) {
         if (array == null) {
             if (index != 0) {
                 throw new IndexOutOfBoundsException("Index: " + index + ", Length: 0");
@@ -4271,8 +4322,9 @@ public class ArrayUtils {
      * (index < 0 || index >= array.length), or if the array is <code>null</code>.
      * @since 1.0
      */
-    public static Object[] remove(Object[] array, int index) {
-        return (Object[]) remove((Object) array, index);
+    @SuppressWarnings("unchecked") // remove() always creates an array of the same type as its input
+    public static <T> T[] remove(T[] array, int index) {
+        return (T[]) remove((Object) array, index);
     }
 
     /**
@@ -4300,7 +4352,7 @@ public class ArrayUtils {
      *         occurrence of the specified element.
      * @since 1.0
      */
-    public static Object[] removeElement(Object[] array, Object element) {
+    public static <T> T[] removeElement(T[] array, Object element) {
         int index = indexOf(array, element);
         if (index == INDEX_NOT_FOUND) {
             return clone(array);
@@ -4865,6 +4917,366 @@ public class ArrayUtils {
     }
 
     /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll(["a", "b", "c"], 0, 2) = ["b"]
+     * ArrayUtils.removeAll(["a", "b", "c"], 1, 2) = ["a"]
+     * </pre>
+     *
+     * @param <T> the component type of the array
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    @SuppressWarnings("unchecked")
+    // removeAll() always creates an array of the same type as its input
+    public static <T> T[] removeAll(T[] array, int... indices) {
+        return (T[]) removeAll((Object) array, clone(indices));
+    }
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static byte[] removeAll(byte[] array, int... indices) {
+        return (byte[]) removeAll((Object) array, clone(indices));
+    }
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static short[] removeAll(short[] array, int... indices) {
+        return (short[]) removeAll((Object) array, clone(indices));
+    }
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static int[] removeAll(int[] array, int... indices) {
+        return (int[]) removeAll((Object) array, clone(indices));
+    }
+
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static char[] removeAll(char[] array, int... indices) {
+        return (char[]) removeAll((Object) array, clone(indices));
+    }
+
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static long[] removeAll(long[] array, int... indices) {
+        return (long[]) removeAll((Object) array, clone(indices));
+    }
+
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static float[] removeAll(float[] array, int... indices) {
+        return (float[]) removeAll((Object) array, clone(indices));
+    }
+
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([1], 0)             = []
+     * ArrayUtils.removeAll([2, 6], 0)          = [6]
+     * ArrayUtils.removeAll([2, 6], 0, 1)       = []
+     * ArrayUtils.removeAll([2, 6, 3], 1, 2)    = [2]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 2)    = [6]
+     * ArrayUtils.removeAll([2, 6, 3], 0, 1, 2) = []
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static double[] removeAll(double[] array, int... indices) {
+        return (double[]) removeAll((Object) array, clone(indices));
+    }
+
+
+    /**
+     * <p>Removes the elements at the specified positions from the specified array.
+     * All remaining elements are shifted to the left.</p>
+     *
+     * <p>This method returns a new array with the same elements of the input
+     * array except those at the specified positions. The component
+     * type of the returned array is always the same as that of the input
+     * array.</p>
+     *
+     * <p>If the input array is {@code null}, an IndexOutOfBoundsException
+     * will be thrown, because in that case no valid index can be specified.</p>
+     *
+     * <pre>
+     * ArrayUtils.removeAll([true, false, true], 0, 2) = [false]
+     * ArrayUtils.removeAll([true, false, true], 1, 2) = [true]
+     * </pre>
+     *
+     * @param array   the array to remove the element from, may not be {@code null}
+     * @param indices the positions of the elements to be removed
+     * @return A new array containing the existing elements except those
+     *         at the specified positions.
+     * @throws IndexOutOfBoundsException if any index is out of range
+     * (index < 0 || index >= array.length), or if the array is {@code null}.
+     * @since 3.0.1
+     */
+    public static boolean[] removeAll(boolean[] array, int... indices) {
+        return (boolean[]) removeAll((Object) array, clone(indices));
+    }
+
+    /**
+     * Removes multiple array elements specified by index.
+     * @param array source
+     * @param indices to remove, WILL BE SORTED--so only clones of user-owned arrays!
+     * @return new array of same type minus elements specified by unique values of {@code indices}
+     * @since 1.0
+     */
+    private static Object removeAll(Object array, int... indices) {
+        int length = getLength(array);
+        int diff = 0;
+
+        if (isNotEmpty(indices)) {
+            Arrays.sort(indices);
+
+            int i = indices.length;
+            int prevIndex = length;
+            while (--i >= 0) {
+                int index = indices[i];
+                if (index < 0 || index >= length) {
+                    throw new IndexOutOfBoundsException("Index: " + index + ", Length: " + length);
+                }
+                if (index >= prevIndex) {
+                    continue;
+                }
+                diff++;
+                prevIndex = index;
+            }
+        }
+        Object result = Array.newInstance(array.getClass().getComponentType(), length - diff);
+        if (diff < length) {
+            int end = length;
+            int dest = length - diff;
+            for (int i = indices.length - 1; i >= 0; i--) {
+                int index = indices[i];
+                if (end - index > 1) {
+                    int cp = end - index - 1;
+                    dest -= cp;
+                    System.arraycopy(array, index + 1, result, dest, cp);
+                }
+                end = index;
+            }
+            if (end > 0) {
+                System.arraycopy(array, 0, result, 0, end);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Extract a set of Integer indices into an int[].
+     * @param coll {@code HashSet} of {@code Integer}
+     * @return int[]
+     * @since 1.0
+     */
+    private static int[] extractIndices(HashSet<Integer> coll) {
+        int[] result = new int[coll.size()];
+        int i = 0;
+        for (Integer index : coll) {
+            result[i++] = index.intValue();
+        }
+        return result;
+    }
+
+    /**
      * Converts the given Collection into an array of Strings. The returned array does not contain <code>null</code>
      * entries. Note that {@link Arrays#sort(Object[])} will throw an {@link NullPointerException} if an array element
      * is <code>null</code>.
@@ -4890,7 +5302,7 @@ public class ArrayUtils {
      * @return The given array or a new array without null.
      */
     static String[] toNoNullStringArray(Object[] array) {
-        ArrayList list = new ArrayList(array.length);
+        List list = new ArrayList(array.length);
         for (int i = 0; i < array.length; i++) {
             Object e = array[i];
             if (e != null) {

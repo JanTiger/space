@@ -19,41 +19,41 @@ import java.math.BigInteger;
 public class NumberUtils {
 
     /** Reusable Long constant for zero. */
-    public static final Long LONG_ZERO = new Long(0L);
+    public static final Long LONG_ZERO = Long.valueOf(0L);
     /** Reusable Long constant for one. */
-    public static final Long LONG_ONE = new Long(1L);
+    public static final Long LONG_ONE = Long.valueOf(1L);
     /** Reusable Long constant for minus one. */
-    public static final Long LONG_MINUS_ONE = new Long(-1L);
+    public static final Long LONG_MINUS_ONE = Long.valueOf(-1L);
     /** Reusable Integer constant for zero. */
-    public static final Integer INTEGER_ZERO = new Integer(0);
+    public static final Integer INTEGER_ZERO = Integer.valueOf(0);
     /** Reusable Integer constant for one. */
-    public static final Integer INTEGER_ONE = new Integer(1);
+    public static final Integer INTEGER_ONE = Integer.valueOf(1);
     /** Reusable Integer constant for minus one. */
-    public static final Integer INTEGER_MINUS_ONE = new Integer(-1);
+    public static final Integer INTEGER_MINUS_ONE = Integer.valueOf(-1);
     /** Reusable Short constant for zero. */
-    public static final Short SHORT_ZERO = new Short((short) 0);
+    public static final Short SHORT_ZERO = Short.valueOf((short) 0);
     /** Reusable Short constant for one. */
-    public static final Short SHORT_ONE = new Short((short) 1);
+    public static final Short SHORT_ONE = Short.valueOf((short) 1);
     /** Reusable Short constant for minus one. */
-    public static final Short SHORT_MINUS_ONE = new Short((short) -1);
+    public static final Short SHORT_MINUS_ONE = Short.valueOf((short) -1);
     /** Reusable Byte constant for zero. */
-    public static final Byte BYTE_ZERO = new Byte((byte) 0);
+    public static final Byte BYTE_ZERO = Byte.valueOf((byte) 0);
     /** Reusable Byte constant for one. */
-    public static final Byte BYTE_ONE = new Byte((byte) 1);
+    public static final Byte BYTE_ONE = Byte.valueOf((byte) 1);
     /** Reusable Byte constant for minus one. */
-    public static final Byte BYTE_MINUS_ONE = new Byte((byte) -1);
+    public static final Byte BYTE_MINUS_ONE = Byte.valueOf((byte) -1);
     /** Reusable Double constant for zero. */
-    public static final Double DOUBLE_ZERO = new Double(0.0d);
+    public static final Double DOUBLE_ZERO = Double.valueOf(0.0d);
     /** Reusable Double constant for one. */
-    public static final Double DOUBLE_ONE = new Double(1.0d);
+    public static final Double DOUBLE_ONE = Double.valueOf(1.0d);
     /** Reusable Double constant for minus one. */
-    public static final Double DOUBLE_MINUS_ONE = new Double(-1.0d);
+    public static final Double DOUBLE_MINUS_ONE = Double.valueOf(-1.0d);
     /** Reusable Float constant for zero. */
-    public static final Float FLOAT_ZERO = new Float(0.0f);
+    public static final Float FLOAT_ZERO = Float.valueOf(0.0f);
     /** Reusable Float constant for one. */
-    public static final Float FLOAT_ONE = new Float(1.0f);
+    public static final Float FLOAT_ONE = Float.valueOf(1.0f);
     /** Reusable Float constant for minus one. */
-    public static final Float FLOAT_MINUS_ONE = new Float(-1.0f);
+    public static final Float FLOAT_MINUS_ONE = Float.valueOf(-1.0f);
 
     /**
      * <p><code>NumberUtils</code> instances should NOT be constructed in standard programming.
@@ -443,7 +443,7 @@ public class NumberUtils {
             // a wrong value.
             return null;
         }
-        if (str.startsWith("0x") || str.startsWith("-0x")) {
+        if (str.startsWith("0x") || str.startsWith("-0x") || str.startsWith("0X") || str.startsWith("-0X")) {
             return createInteger(str);
         }
         char lastChar = str.charAt(str.length() - 1);
@@ -665,7 +665,7 @@ public class NumberUtils {
         if (str == null) {
             return null;
         }
-        return Long.valueOf(str);
+        return Long.decode(str);
     }
 
     /**
@@ -1262,131 +1262,6 @@ public class NumberUtils {
 
     //-----------------------------------------------------------------------
     /**
-     * <p>Compares two <code>doubles</code> for order.</p>
-     *
-     * <p>This method is more comprehensive than the standard Java greater
-     * than, less than and equals operators.</p>
-     * <ul>
-     *  <li>It returns <code>-1</code> if the first value is less than the second.</li>
-     *  <li>It returns <code>+1</code> if the first value is greater than the second.</li>
-     *  <li>It returns <code>0</code> if the values are equal.</li>
-     * </ul>
-     *
-     * <p>
-     * The ordering is as follows, largest to smallest:
-     * <ul>
-     *  <li>NaN
-     *  <li>Positive infinity
-     *  <li>Maximum double
-     *  <li>Normal positive numbers
-     *  <li>+0.0
-     *  <li>-0.0
-     *  <li>Normal negative numbers
-     *  <li>Minimum double (<code>-Double.MAX_VALUE</code>)
-     *  <li>Negative infinity
-     * </ul>
-     * </p>
-     *
-     * <p>Comparing <code>NaN</code> with <code>NaN</code> will
-     * return <code>0</code>.</p>
-     *
-     * @param lhs  the first <code>double</code>
-     * @param rhs  the second <code>double</code>
-     * @return <code>-1</code> if lhs is less, <code>+1</code> if greater,
-     *  <code>0</code> if equal to rhs
-     */
-    public static int compare(double lhs, double rhs) {
-        if (lhs < rhs) {
-            return -1;
-        }
-        if (lhs > rhs) {
-            return +1;
-        }
-        // Need to compare bits to handle 0.0 == -0.0 being true
-        // compare should put -0.0 < +0.0
-        // Two NaNs are also == for compare purposes
-        // where NaN == NaN is false
-        long lhsBits = Double.doubleToLongBits(lhs);
-        long rhsBits = Double.doubleToLongBits(rhs);
-        if (lhsBits == rhsBits) {
-            return 0;
-        }
-        // Something exotic! A comparison to NaN or 0.0 vs -0.0
-        // Fortunately NaN's long is > than everything else
-        // Also negzeros bits < poszero
-        // NAN: 9221120237041090560
-        // MAX: 9218868437227405311
-        // NEGZERO: -9223372036854775808
-        if (lhsBits < rhsBits) {
-            return -1;
-        } else {
-            return +1;
-        }
-    }
-
-    /**
-     * <p>Compares two floats for order.</p>
-     *
-     * <p>This method is more comprehensive than the standard Java greater than,
-     * less than and equals operators.</p>
-     * <ul>
-     *  <li>It returns <code>-1</code> if the first value is less than the second.
-     *  <li>It returns <code>+1</code> if the first value is greater than the second.
-     *  <li>It returns <code>0</code> if the values are equal.
-     * </ul>
-     *
-     * <p> The ordering is as follows, largest to smallest:
-     * <ul>
-     * <li>NaN
-     * <li>Positive infinity
-     * <li>Maximum float
-     * <li>Normal positive numbers
-     * <li>+0.0
-     * <li>-0.0
-     * <li>Normal negative numbers
-     * <li>Minimum float (<code>-Float.MAX_VALUE</code>)
-     * <li>Negative infinity
-     * </ul>
-     *
-     * <p>Comparing <code>NaN</code> with <code>NaN</code> will return
-     * <code>0</code>.</p>
-     *
-     * @param lhs  the first <code>float</code>
-     * @param rhs  the second <code>float</code>
-     * @return <code>-1</code> if lhs is less, <code>+1</code> if greater,
-     *  <code>0</code> if equal to rhs
-     */
-    public static int compare(float lhs, float rhs) {
-        if (lhs < rhs) {
-            return -1;
-        }
-        if (lhs > rhs) {
-            return +1;
-        }
-        //Need to compare bits to handle 0.0 == -0.0 being true
-        // compare should put -0.0 < +0.0
-        // Two NaNs are also == for compare purposes
-        // where NaN == NaN is false
-        int lhsBits = Float.floatToIntBits(lhs);
-        int rhsBits = Float.floatToIntBits(rhs);
-        if (lhsBits == rhsBits) {
-            return 0;
-        }
-        //Something exotic! A comparison to NaN or 0.0 vs -0.0
-        //Fortunately NaN's int is > than everything else
-        //Also negzeros bits < poszero
-        //NAN: 2143289344
-        //MAX: 2139095039
-        //NEGZERO: -2147483648
-        if (lhsBits < rhsBits) {
-            return -1;
-        } else {
-            return +1;
-        }
-    }
-
-    //-----------------------------------------------------------------------
-    /**
      * <p>Checks whether the <code>String</code> contains only
      * digit characters.</p>
      *
@@ -1433,8 +1308,7 @@ public class NumberUtils {
         boolean foundDigit = false;
         // deal with any possible sign up front
         int start = (chars[0] == '-') ? 1 : 0;
-        if (sz > start + 1) {
-            if (chars[start] == '0' && chars[start + 1] == 'x') {
+        if (sz > start + 1 && chars[start] == '0' && chars[start + 1] == 'x') {
                 int i = start + 2;
                 if (i == sz) {
                     return false; // str == "0x"
@@ -1448,7 +1322,6 @@ public class NumberUtils {
                     }
                 }
                 return true;
-            }
         }
         sz--; // don't want to loop to the last char, check it afterwords
               // for type qualifiers
@@ -1514,8 +1387,8 @@ public class NumberUtils {
             }
             if (chars[i] == 'l'
                 || chars[i] == 'L') {
-                // not allowing L with an exponent
-                return foundDigit && !hasExp;
+                // not allowing L with an exponent or decimal point
+                return foundDigit && !hasExp && !hasDecPoint;
             }
             // last character is illegal
             return false;

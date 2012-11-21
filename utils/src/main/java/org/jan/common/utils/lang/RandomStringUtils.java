@@ -166,7 +166,7 @@ public class RandomStringUtils {
      * @throws ArrayIndexOutOfBoundsException if there are not
      *  <code>(end - start) + 1</code> characters in the set array.
      */
-    public static String random(int count, int start, int end, boolean letters, boolean numbers, char[] chars) {
+    public static String random(int count, int start, int end, boolean letters, boolean numbers, char... chars) {
         return random(count, start, end, letters, numbers, chars, RANDOM);
     }
 
@@ -210,7 +210,7 @@ public class RandomStringUtils {
         } else if (count < 0) {
             throw new IllegalArgumentException("Requested random string length " + count + " is less than 0.");
         }
-        if ((start == 0) && (end == 0)) {
+        if (start == 0 && end == 0) {
             end = 'z' + 1;
             start = ' ';
             if (!letters && !numbers) {
@@ -296,7 +296,7 @@ public class RandomStringUtils {
      * @return the random string
      * @throws IllegalArgumentException if <code>count</code> &lt; 0.
      */
-    public static String random(int count, char[] chars) {
+    public static String random(int count, char... chars) {
         if (chars == null) {
             return random(count, 0, 0, false, false, null, RANDOM);
         }

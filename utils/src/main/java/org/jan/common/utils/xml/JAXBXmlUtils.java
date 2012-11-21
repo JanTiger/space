@@ -2,9 +2,6 @@ package org.jan.common.utils.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -15,9 +12,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.sax.SAXSource;
 
-import org.jan.common.utils.io.IOUtils;
-import org.jdom2.Document;
-import org.jdom2.output.XMLOutputter;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -30,7 +24,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @author Jan.Wang
  * @since 1.0
  */
-public class JdomXmlUtils {
+public class JAXBXmlUtils {
 
     private static final String ENCODING_TYPE = "UTF-8";
 
@@ -103,26 +97,6 @@ public class JdomXmlUtils {
             marshaller.marshal(obj, outputStream);
         } catch (JAXBException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Outputs the xml doc to the specified path.
-     * @param doc
-     * @param pathname
-     */
-    public static void output(Document doc, String pathname) {
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(pathname);
-            XMLOutputter xmlOutputter = new XMLOutputter();
-            xmlOutputter.output(doc, out);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(out);
         }
     }
 

@@ -3,40 +3,36 @@ package org.jan.common.utils.lang;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>Operations to assist when working with a {@link Locale}.</p>
  *
- * <p>This class tries to handle <code>null</code> input gracefully.
- * An exception will not be thrown for a <code>null</code> input.
+ * <p>This class tries to handle {@code null} input gracefully.
+ * An exception will not be thrown for a {@code null} input.
  * Each method documents its behaviour in more detail.</p>
  *
- * @author Jan.Wong
- * @since 1.0
+ * @since 2.2
+ * @version $Id: LocaleUtils.java 1090563 2011-04-09 11:00:10Z sebb $
  */
 public class LocaleUtils {
 
-    /** Unmodifiable list of available locales. */
-    private static List cAvailableLocaleList; // lazily created by availableLocaleList()
+    /** Concurrent map of language locales by country. */
+    private static final ConcurrentMap<String, List<Locale>> cLanguagesByCountry =
+        new ConcurrentHashMap<String, List<Locale>>();
 
-    /** Unmodifiable set of available locales. */
-    private static Set cAvailableLocaleSet;   // lazily created by availableLocaleSet()
-
-    /** Unmodifiable map of language locales by country. */
-    private static final Map cLanguagesByCountry = Collections.synchronizedMap(new HashMap());
-
-    /** Unmodifiable map of country locales by language. */
-    private static final Map cCountriesByLanguage = Collections.synchronizedMap(new HashMap());
+    /** Concurrent map of country locales by language. */
+    private static final ConcurrentMap<String, List<Locale>> cCountriesByLanguage =
+        new ConcurrentHashMap<String, List<Locale>>();
 
     /**
-     * <p><code>LocaleUtils</code> instances should NOT be constructed in standard programming.
-     * Instead, the class should be used as <code>LocaleUtils.toLocale("en_GB");</code>.</p>
+     * <p>{@code LocaleUtils} instances should NOT be constructed in standard programming.
+     * Instead, the class should be used as {@code LocaleUtils.toLocale("en_GB");}.</p>
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
@@ -122,9 +118,9 @@ public class LocaleUtils {
      * </pre>
      *
      * @param locale  the locale to start from
-     * @return the unmodifiable list of Locale objects, 0 being locale, never null
+     * @return the unmodifiable list of Locale objects, 0 being locale, not null
      */
-    public static List localeLookupList(Locale locale) {
+    public static List<Locale> localeLookupList(Locale locale) {
         return localeLookupList(locale, locale);
     }
 
@@ -144,10 +140,10 @@ public class LocaleUtils {
      *
      * @param locale  the locale to start from, null returns empty list
      * @param defaultLocale  the default locale to use if no other is found
-     * @return the unmodifiable list of Locale objects, 0 being locale, never null
+     * @return the unmodifiable list of Locale objects, 0 being locale, not null
      */
-    public static List localeLookupList(Locale locale, Locale defaultLocale) {
-        List list = new ArrayList(4);
+    public static List<Locale> localeLookupList(Locale locale, Locale defaultLocale) {
+        List<Locale> list = new ArrayList<Locale>(4);
         if (locale != null) {
             list.add(locale);
             if (locale.getVariant().length() > 0) {
@@ -173,23 +169,8 @@ public class LocaleUtils {
      *
      * @return the unmodifiable list of available locales
      */
-    public static List availableLocaleList() {
-        if(cAvailableLocaleList == null) {
-            initAvailableLocaleList();
-        }
-        return cAvailableLocaleList;
-    }
-
-    /**
-     * Initializes the availableLocaleList. It is separate from availableLocaleList()
-     * to avoid the synchronized block affecting normal use, yet synchronized and
-     * lazy loading to avoid a static block affecting other methods in this class.
-     */
-    private static synchronized void initAvailableLocaleList() {
-        if(cAvailableLocaleList == null) {
-            List list = Arrays.asList(Locale.getAvailableLocales());
-            cAvailableLocaleList = Collections.unmodifiableList(list);
-        }
+    public static List<Locale> availableLocaleList() {
+        return SyncAvoid.AVAILABLE_LOCALE_LIST;
     }
 
     //-----------------------------------------------------------------------
@@ -202,22 +183,8 @@ public class LocaleUtils {
      *
      * @return the unmodifiable set of available locales
      */
-    public static Set availableLocaleSet() {
-        if(cAvailableLocaleSet == null) {
-            initAvailableLocaleSet();
-        }
-        return cAvailableLocaleSet;
-    }
-
-    /**
-     * Initializes the availableLocaleSet. It is separate from availableLocaleSet()
-     * to avoid the synchronized block affecting normal use, yet synchronized and
-     * lazy loading to avoid a static block affecting other methods in this class.
-     */
-    private static synchronized void initAvailableLocaleSet() {
-        if(cAvailableLocaleSet == null) {
-            cAvailableLocaleSet = Collections.unmodifiableSet( new HashSet(availableLocaleList()) );
-        }
+    public static Set<Locale> availableLocaleSet() {
+        return SyncAvoid.AVAILABLE_LOCALE_SET;
     }
 
     //-----------------------------------------------------------------------
@@ -239,26 +206,26 @@ public class LocaleUtils {
      * languages available for that country. Variant locales are removed.</p>
      *
      * @param countryCode  the 2 letter country code, null returns empty
-     * @return an unmodifiable List of Locale objects, never null
+     * @return an unmodifiable List of Locale objects, not null
      */
-    public static List languagesByCountry(String countryCode) {
-        List langs = (List) cLanguagesByCountry.get(countryCode);  //syncd
+    public static List<Locale> languagesByCountry(String countryCode) {
+        if (countryCode == null) {
+            return Collections.emptyList();
+        }
+        List<Locale> langs = cLanguagesByCountry.get(countryCode);
         if (langs == null) {
-            if (countryCode != null) {
-                langs = new ArrayList();
-                List locales = availableLocaleList();
-                for (int i = 0; i < locales.size(); i++) {
-                    Locale locale = (Locale) locales.get(i);
-                    if (countryCode.equals(locale.getCountry()) &&
-                            locale.getVariant().length() == 0) {
-                        langs.add(locale);
-                    }
+            langs = new ArrayList<Locale>();
+            List<Locale> locales = availableLocaleList();
+            for (int i = 0; i < locales.size(); i++) {
+                Locale locale = locales.get(i);
+                if (countryCode.equals(locale.getCountry()) &&
+                        locale.getVariant().length() == 0) {
+                    langs.add(locale);
                 }
-                langs = Collections.unmodifiableList(langs);
-            } else {
-                langs = Collections.EMPTY_LIST;
             }
-            cLanguagesByCountry.put(countryCode, langs);  //syncd
+            langs = Collections.unmodifiableList(langs);
+            cLanguagesByCountry.putIfAbsent(countryCode, langs);
+            langs = cLanguagesByCountry.get(countryCode);
         }
         return langs;
     }
@@ -271,29 +238,44 @@ public class LocaleUtils {
      * countries available for that language. Variant locales are removed.</p>
      *
      * @param languageCode  the 2 letter language code, null returns empty
-     * @return an unmodifiable List of Locale objects, never null
+     * @return an unmodifiable List of Locale objects, not null
      */
-    public static List countriesByLanguage(String languageCode) {
-        List countries = (List) cCountriesByLanguage.get(languageCode);  //syncd
+    public static List<Locale> countriesByLanguage(String languageCode) {
+        if (languageCode == null) {
+            return Collections.emptyList();
+        }
+        List<Locale> countries = cCountriesByLanguage.get(languageCode);
         if (countries == null) {
-            if (languageCode != null) {
-                countries = new ArrayList();
-                List locales = availableLocaleList();
-                for (int i = 0; i < locales.size(); i++) {
-                    Locale locale = (Locale) locales.get(i);
-                    if (languageCode.equals(locale.getLanguage()) &&
-                            locale.getCountry().length() != 0 &&
-                            locale.getVariant().length() == 0) {
-                        countries.add(locale);
-                    }
+            countries = new ArrayList<Locale>();
+            List<Locale> locales = availableLocaleList();
+            for (int i = 0; i < locales.size(); i++) {
+                Locale locale = locales.get(i);
+                if (languageCode.equals(locale.getLanguage()) &&
+                        locale.getCountry().length() != 0 &&
+                        locale.getVariant().length() == 0) {
+                    countries.add(locale);
                 }
-                countries = Collections.unmodifiableList(countries);
-            } else {
-                countries = Collections.EMPTY_LIST;
             }
-            cCountriesByLanguage.put(languageCode, countries);  //syncd
+            countries = Collections.unmodifiableList(countries);
+            cCountriesByLanguage.putIfAbsent(languageCode, countries);
+            countries = cCountriesByLanguage.get(languageCode);
         }
         return countries;
+    }
+
+    //-----------------------------------------------------------------------
+    // class to avoid synchronization
+    static class SyncAvoid {
+        /** Unmodifiable list of available locales. */
+        private static List<Locale> AVAILABLE_LOCALE_LIST;
+        /** Unmodifiable set of available locales. */
+        private static Set<Locale> AVAILABLE_LOCALE_SET;
+
+        static {
+            List<Locale> list = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));  // extra safe
+            AVAILABLE_LOCALE_LIST = Collections.unmodifiableList(list);
+            AVAILABLE_LOCALE_SET = Collections.unmodifiableSet(new HashSet<Locale>(availableLocaleList()));
+        }
     }
 
     /**

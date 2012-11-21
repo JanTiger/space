@@ -328,12 +328,10 @@ public class DurationFormatUtils {
                     days += start.getActualMaximum(Calendar.DAY_OF_YEAR) - start.get(Calendar.DAY_OF_YEAR);
 
                     // Not sure I grok why this is needed, but the brutal tests show it is
-                    if(start instanceof GregorianCalendar) {
-                        if( (start.get(Calendar.MONTH) == Calendar.FEBRUARY) &&
-                            (start.get(Calendar.DAY_OF_MONTH) == 29 ) )
-                        {
-                            days += 1;
-                        }
+                    if (start instanceof GregorianCalendar &&
+                            start.get(Calendar.MONTH) == Calendar.FEBRUARY &&
+                            start.get(Calendar.DAY_OF_MONTH) == 29) {
+                        days += 1;
                     }
 
                     start.add(Calendar.YEAR, 1);
@@ -400,7 +398,7 @@ public class DurationFormatUtils {
      */
     static String format(Token[] tokens, int years, int months, int days, int hours, int minutes, int seconds,
             int milliseconds, boolean padWithZeros) {
-        StrBuilder buffer = new StrBuilder();
+        StringBuffer buffer = new StringBuffer();
         boolean lastOutputSeconds = false;
         int sz = tokens.length;
         for (int i = 0; i < sz; i++) {
@@ -469,7 +467,7 @@ public class DurationFormatUtils {
      */
     static Token[] lexx(String format) {
         char[] array = format.toCharArray();
-        ArrayList list = new ArrayList(array.length);
+        ArrayList<Token> list = new ArrayList<Token>(array.length);
 
         boolean inLiteral = false;
         StringBuffer buffer = null;
@@ -520,7 +518,7 @@ public class DurationFormatUtils {
                 buffer = null;
             }
         }
-        return (Token[]) list.toArray( new Token[list.size()] );
+        return list.toArray( new Token[list.size()] );
     }
 
     /**
@@ -545,7 +543,7 @@ public class DurationFormatUtils {
             return false;
         }
 
-        private Object value;
+        private final Object value;
         private int count;
 
         /**
@@ -601,6 +599,7 @@ public class DurationFormatUtils {
          * @param obj2 Object to consider equality of
          * @return boolean <code>true</code> if equal
          */
+        @Override
         public boolean equals(Object obj2) {
             if (obj2 instanceof Token) {
                 Token tok2 = (Token) obj2;
@@ -628,6 +627,7 @@ public class DurationFormatUtils {
          *
          * @return The hashcode for the token
          */
+        @Override
         public int hashCode() {
             return this.value.hashCode();
         }
@@ -637,6 +637,7 @@ public class DurationFormatUtils {
          *
          * @return String representation of the token
          */
+        @Override
         public String toString() {
             return StringUtils.repeat(this.value.toString(), this.count);
         }
