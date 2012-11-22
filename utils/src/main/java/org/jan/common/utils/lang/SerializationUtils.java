@@ -35,7 +35,7 @@ public class SerializationUtils {
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
-     * @since 2.0
+     * @since 1.0
      */
     public SerializationUtils() {
         super();

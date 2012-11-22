@@ -189,7 +189,7 @@ public class DateFormatUtils {
      * @param pattern  the pattern to use to format the calendar, not null
      * @return the formatted calendar
      * @see FastDateFormat#format(Calendar)
-     * @since 2.4
+     * @since 1.0
      */
     public static String format(Calendar calendar, String pattern) {
         return format(calendar, pattern, null, null);
@@ -227,7 +227,7 @@ public class DateFormatUtils {
      * @param timeZone  the time zone  to use, may be <code>null</code>
      * @return the formatted calendar
      * @see FastDateFormat#format(Calendar)
-     * @since 2.4
+     * @since 1.0
      */
     public static String format(Calendar calendar, String pattern, TimeZone timeZone) {
         return format(calendar, pattern, timeZone, null);
@@ -265,7 +265,7 @@ public class DateFormatUtils {
      * @param locale  the locale to use, may be <code>null</code>
      * @return the formatted calendar
      * @see FastDateFormat#format(Calendar)
-     * @since 2.4
+     * @since 1.0
      */
     public static String format(Calendar calendar, String pattern, Locale locale) {
         return format(calendar, pattern, null, locale);
@@ -307,7 +307,7 @@ public class DateFormatUtils {
      * @param locale  the locale to use, may be <code>null</code>
      * @return the formatted calendar
      * @see FastDateFormat#format(Calendar)
-     * @since 2.4
+     * @since 1.0
      */
     public static String format(Calendar calendar, String pattern, TimeZone timeZone, Locale locale) {
         FastDateFormat df = FastDateFormat.getInstance(pattern, timeZone, locale);
@@ -630,7 +630,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date formatter
      * @throws IllegalArgumentException if the Locale has no date
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateInstance(int style) {
         return cache.getDateTimeInstance(style, null, null, null);
@@ -645,7 +645,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date formatter
      * @throws IllegalArgumentException if the Locale has no date
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateInstance(int style, Locale locale) {
         return cache.getDateTimeInstance(style, null, null, locale);
@@ -661,7 +661,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date formatter
      * @throws IllegalArgumentException if the Locale has no date
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateInstance(int style, TimeZone timeZone) {
         return cache.getDateTimeInstance(style, null, timeZone, null);
@@ -692,7 +692,7 @@ class FastDateFormat extends Format {
      * @return a localized standard time formatter
      * @throws IllegalArgumentException if the Locale has no time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getTimeInstance(int style) {
         return cache.getDateTimeInstance(null, style, null, null);
@@ -707,7 +707,7 @@ class FastDateFormat extends Format {
      * @return a localized standard time formatter
      * @throws IllegalArgumentException if the Locale has no time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getTimeInstance(int style, Locale locale) {
         return cache.getDateTimeInstance(null, style, null, locale);
@@ -723,7 +723,7 @@ class FastDateFormat extends Format {
      * @return a localized standard time formatter
      * @throws IllegalArgumentException if the Locale has no time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getTimeInstance(int style, TimeZone timeZone) {
         return cache.getDateTimeInstance(null, style, timeZone, null);
@@ -755,7 +755,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date/time formatter
      * @throws IllegalArgumentException if the Locale has no date/time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle) {
         return cache.getDateTimeInstance(dateStyle, timeStyle, null, null);
@@ -771,7 +771,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date/time formatter
      * @throws IllegalArgumentException if the Locale has no date/time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, Locale locale) {
         return cache.getDateTimeInstance(dateStyle, timeStyle, null, locale);
@@ -788,7 +788,7 @@ class FastDateFormat extends Format {
      * @return a localized standard date/time formatter
      * @throws IllegalArgumentException if the Locale has no date/time
      *  pattern defined
-     * @since 2.1
+     * @since 1.0
      */
     public static FastDateFormat getDateTimeInstance(int dateStyle, int timeStyle, TimeZone timeZone) {
         return getDateTimeInstance(dateStyle, timeStyle, timeZone, null);
@@ -1106,7 +1106,7 @@ class FastDateFormat extends Format {
      *
      * @param millis  the millisecond value to format
      * @return the formatted string
-     * @since 2.1
+     * @since 1.0
      */
     public String format(long millis) {
         return format(new Date(millis));
@@ -1141,7 +1141,7 @@ class FastDateFormat extends Format {
      * @param millis  the millisecond value to format
      * @param buf  the buffer to format into
      * @return the specified string buffer
-     * @since 2.1
+     * @since 1.0
      */
     public StringBuffer format(long millis, StringBuffer buf) {
         return format(new Date(millis), buf);

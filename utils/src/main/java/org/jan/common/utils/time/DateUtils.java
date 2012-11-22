@@ -29,22 +29,22 @@ public class DateUtils {
 
     /**
      * Number of milliseconds in a standard second.
-     * @since 2.1
+     * @since 1.0
      */
     public static final long MILLIS_PER_SECOND = 1000;
     /**
      * Number of milliseconds in a standard minute.
-     * @since 2.1
+     * @since 1.0
      */
     public static final long MILLIS_PER_MINUTE = 60 * MILLIS_PER_SECOND;
     /**
      * Number of milliseconds in a standard hour.
-     * @since 2.1
+     * @since 1.0
      */
     public static final long MILLIS_PER_HOUR = 60 * MILLIS_PER_MINUTE;
     /**
      * Number of milliseconds in a standard day.
-     * @since 2.1
+     * @since 1.0
      */
     public static final long MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR;
 
@@ -93,17 +93,17 @@ public class DateUtils {
 
     /**
      * Constant marker for truncating.
-     * @since 3.0
+     * @since 1.0
      */
     private static final int MODIFY_TRUNCATE = 0;
     /**
      * Constant marker for rounding.
-     * @since 3.0
+     * @since 1.0
      */
     private static final int MODIFY_ROUND = 1;
     /**
      * Constant marker for ceiling.
-     * @since 3.0
+     * @since 1.0
      */
     private static final int MODIFY_CEILING = 2;
 
@@ -131,7 +131,7 @@ public class DateUtils {
      * @param date2  the second date, not altered, not null
      * @return true if they represent the same day
      * @throws IllegalArgumentException if either date is <code>null</code>
-     * @since 2.1
+     * @since 1.0
      */
     public static boolean isSameDay(Date date1, Date date2) {
         if (date1 == null || date2 == null) {
@@ -155,7 +155,7 @@ public class DateUtils {
      * @param cal2  the second calendar, not altered, not null
      * @return true if they represent the same day
      * @throws IllegalArgumentException if either calendar is <code>null</code>
-     * @since 2.1
+     * @since 1.0
      */
     public static boolean isSameDay(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
@@ -176,7 +176,7 @@ public class DateUtils {
      * @param date2  the second date, not altered, not null
      * @return true if they represent the same millisecond instant
      * @throws IllegalArgumentException if either date is <code>null</code>
-     * @since 2.1
+     * @since 1.0
      */
     public static boolean isSameInstant(Date date1, Date date2) {
         if (date1 == null || date2 == null) {
@@ -194,7 +194,7 @@ public class DateUtils {
      * @param cal2  the second calendar, not altered, not null
      * @return true if they represent the same millisecond instant
      * @throws IllegalArgumentException if either date is <code>null</code>
-     * @since 2.1
+     * @since 1.0
      */
     public static boolean isSameInstant(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
@@ -214,7 +214,7 @@ public class DateUtils {
      * @param cal2  the second calendar, not altered, not null
      * @return true if they represent the same millisecond instant
      * @throws IllegalArgumentException if either date is <code>null</code>
-     * @since 2.1
+     * @since 1.0
      */
     public static boolean isSameLocalTime(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
@@ -263,7 +263,7 @@ public class DateUtils {
      * @return the parsed date
      * @throws IllegalArgumentException if the date string or pattern array is null
      * @throws ParseException if none of the date patterns were suitable
-     * @since 2.5
+     * @since 1.0
      */
     public static Date parseDateStrictly(String str, String... parsePatterns) throws ParseException {
         return parseDateWithLeniency(str, parsePatterns, false);
@@ -461,7 +461,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setYears(Date date, int amount) {
         return set(date, Calendar.YEAR, amount);
@@ -476,7 +476,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setMonths(Date date, int amount) {
         return set(date, Calendar.MONTH, amount);
@@ -491,7 +491,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setDays(Date date, int amount) {
         return set(date, Calendar.DAY_OF_MONTH, amount);
@@ -507,7 +507,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setHours(Date date, int amount) {
         return set(date, Calendar.HOUR_OF_DAY, amount);
@@ -522,7 +522,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setMinutes(Date date, int amount) {
         return set(date, Calendar.MINUTE, amount);
@@ -537,7 +537,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setSeconds(Date date, int amount) {
         return set(date, Calendar.SECOND, amount);
@@ -552,7 +552,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     public static Date setMilliseconds(Date date, int amount) {
         return set(date, Calendar.MILLISECOND, amount);
@@ -569,7 +569,7 @@ public class DateUtils {
      * @param amount the amount to set
      * @return a new {@code Date} set with the specified value
      * @throws IllegalArgumentException if the date is null
-     * @since 2.4
+     * @since 1.0
      */
     private static Date set(Date date, int calendarField, int amount) {
         if (date == null) {
@@ -590,7 +590,7 @@ public class DateUtils {
      * @param date the date to convert to a Calendar
      * @return the created Calendar
      * @throws NullPointerException if null is passed in
-     * @since 3.0
+     * @since 1.0
      */
     public static Calendar toCalendar(Date date) {
         Calendar c = Calendar.getInstance();
@@ -806,7 +806,7 @@ public class DateUtils {
      * @return the different ceil date, not null
      * @throws IllegalArgumentException if the date is <code>null</code>
      * @throws ArithmeticException if the year is over 280 million
-     * @since 2.5
+     * @since 1.0
      */
     public static Date ceiling(Date date, int field) {
         if (date == null) {
@@ -832,7 +832,7 @@ public class DateUtils {
      * @return the different ceil date, not null
      * @throws IllegalArgumentException if the date is <code>null</code>
      * @throws ArithmeticException if the year is over 280 million
-     * @since 2.5
+     * @since 1.0
      */
     public static Calendar ceiling(Calendar date, int field) {
         if (date == null) {
@@ -858,7 +858,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is <code>null</code>
      * @throws ClassCastException if the object type is not a {@code Date} or {@code Calendar}
      * @throws ArithmeticException if the year is over 280 million
-     * @since 2.5
+     * @since 1.0
      */
     public static Date ceiling(Object date, int field) {
         if (date == null) {
@@ -1210,7 +1210,7 @@ public class DateUtils {
      * @return number of milliseconds within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInMilliseconds(Date date, int fragment) {
         return getFragment(date, fragment, Calendar.MILLISECOND);
@@ -1250,7 +1250,7 @@ public class DateUtils {
      * @return number of seconds within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInSeconds(Date date, int fragment) {
         return getFragment(date, fragment, Calendar.SECOND);
@@ -1290,7 +1290,7 @@ public class DateUtils {
      * @return number of minutes within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInMinutes(Date date, int fragment) {
         return getFragment(date, fragment, Calendar.MINUTE);
@@ -1330,7 +1330,7 @@ public class DateUtils {
      * @return number of hours within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInHours(Date date, int fragment) {
         return getFragment(date, fragment, Calendar.HOUR_OF_DAY);
@@ -1370,7 +1370,7 @@ public class DateUtils {
      * @return number of days  within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInDays(Date date, int fragment) {
         return getFragment(date, fragment, Calendar.DAY_OF_YEAR);
@@ -1410,7 +1410,7 @@ public class DateUtils {
      * @return number of milliseconds within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
   public static long getFragmentInMilliseconds(Calendar calendar, int fragment) {
     return getFragment(calendar, fragment, Calendar.MILLISECOND);
@@ -1449,7 +1449,7 @@ public class DateUtils {
      * @return number of seconds within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInSeconds(Calendar calendar, int fragment) {
         return getFragment(calendar, fragment, Calendar.SECOND);
@@ -1489,7 +1489,7 @@ public class DateUtils {
      * @return number of minutes within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInMinutes(Calendar calendar, int fragment) {
         return getFragment(calendar, fragment, Calendar.MINUTE);
@@ -1529,7 +1529,7 @@ public class DateUtils {
      * @return number of hours within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInHours(Calendar calendar, int fragment) {
         return getFragment(calendar, fragment, Calendar.HOUR_OF_DAY);
@@ -1571,7 +1571,7 @@ public class DateUtils {
      * @return number of days within the fragment of date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     public static long getFragmentInDays(Calendar calendar, int fragment) {
         return getFragment(calendar, fragment, Calendar.DAY_OF_YEAR);
@@ -1586,7 +1586,7 @@ public class DateUtils {
      * @return number of units within the fragment of the date
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     private static long getFragment(Date date, int fragment, int unit) {
         if(date == null) {
@@ -1606,7 +1606,7 @@ public class DateUtils {
      * @return number of units within the fragment of the calendar
      * @throws IllegalArgumentException if the date is <code>null</code> or
      * fragment is not supported
-     * @since 2.4
+     * @since 1.0
      */
     private static long getFragment(Calendar calendar, int fragment, int unit) {
         if(calendar == null) {
@@ -1661,7 +1661,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if any argument is <code>null</code>
      * @see #truncate(Calendar, int)
      * @see #truncatedEquals(Date, Date, int)
-     * @since 3.0
+     * @since 1.0
      */
     public static boolean truncatedEquals(Calendar cal1, Calendar cal2, int field) {
         return truncatedCompareTo(cal1, cal2, field) == 0;
@@ -1678,7 +1678,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if any argument is <code>null</code>
      * @see #truncate(Date, int)
      * @see #truncatedEquals(Calendar, Calendar, int)
-     * @since 3.0
+     * @since 1.0
      */
     public static boolean truncatedEquals(Date date1, Date date2, int field) {
         return truncatedCompareTo(date1, date2, field) == 0;
@@ -1696,7 +1696,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if any argument is <code>null</code>
      * @see #truncate(Calendar, int)
      * @see #truncatedCompareTo(Date, Date, int)
-     * @since 3.0
+     * @since 1.0
      */
     public static int truncatedCompareTo(Calendar cal1, Calendar cal2, int field) {
         Calendar truncatedCal1 = truncate(cal1, field);
@@ -1716,7 +1716,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if any argument is <code>null</code>
      * @see #truncate(Calendar, int)
      * @see #truncatedCompareTo(Date, Date, int)
-     * @since 3.0
+     * @since 1.0
      */
     public static int truncatedCompareTo(Date date1, Date date2, int field) {
         Date truncatedDate1 = truncate(date1, field);
@@ -1731,7 +1731,7 @@ public class DateUtils {
      * @param unit  a {@code Calendar} field constant which is a valid unit for a fragment
      * @return the number of milliseconds in the field
      * @throws IllegalArgumentException if date can't be represented in milliseconds
-     * @since 2.4
+     * @since 1.0
      */
     private static long getMillisPerUnit(int unit) {
         long result = Long.MAX_VALUE;

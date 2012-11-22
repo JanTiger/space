@@ -24,81 +24,6 @@ public class WordUtils {
       super();
     }
 
-    // Wrapping
-    //--------------------------------------------------------------------------
-//    /**
-//     * <p>Wraps a block of text to a specified line length using '\n' as
-//     * a newline.</p>
-//     *
-//     * <p>This method takes a block of text, which might have long lines in it
-//     * and wraps the long lines based on the supplied lineLength parameter.</p>
-//     *
-//     * <p>If a single word is longer than the line length (eg. a URL), it will
-//     * not be broken, and will display beyond the expected width.</p>
-//     *
-//     * <p>If there are tabs in inString, you are going to get results that are
-//     * a bit strange. Tabs are a single character but are displayed as 4 or 8
-//     * spaces. Remove the tabs.</p>
-//     *
-//     * @param str  text which is in need of word-wrapping, may be null
-//     * @param lineLength  the column to wrap the words at
-//     * @return the text with all the long lines word-wrapped
-//     *  <code>null</code> if null string input
-//     */
-//    public static String wrapText(String str, int lineLength) {
-//        return wrap(str, null, lineLength);
-//    }
-
-//    /**
-//     * <p>Wraps a block of text to a specified line length.</p>
-//     *
-//     * <p>This method takes a block of text, which might have long lines in it
-//     * and wraps the long lines based on the supplied lineLength parameter.</p>
-//     *
-//     * <p>If a single word is longer than the wrapColumn (eg. a URL), it will
-//     * not be broken, and will display beyond the expected width.</p>
-//     *
-//     * <p>If there are tabs in inString, you are going to get results that are
-//     * a bit strange. Tabs are a single character but are displayed as 4 or 8
-//     * spaces. Remove the tabs.</p>
-//     *
-//     * @param str  text which is in need of word-wrapping, may be null
-//     * @param newLineChars  the characters that define a newline, null treated as \n
-//     * @param lineLength  the column to wrap the words at
-//     * @return the text with all the long lines word-wrapped
-//     *  <code>null</code> if null string input
-//     */
-//    public static String wrapText(String str, String newLineChars, int lineLength) {
-//        if (str == null) {
-//            return null;
-//        }
-//        if (newLineChars == null) {
-//            newLineChars = "\n";
-//        }
-//        StringTokenizer lineTokenizer = new StringTokenizer(str, newLineChars, true);
-//        StringBuffer stringBuffer = new StringBuffer();
-//
-//        while (lineTokenizer.hasMoreTokens()) {
-//            try {
-//                String nextLine = lineTokenizer.nextToken();
-//
-//                if (nextLine.length() > lineLength) {
-//                    // This line is long enough to be wrapped.
-//                    nextLine = wrapLine(nextLine, null, lineLength, false);
-//                }
-//
-//                stringBuffer.append(nextLine);
-//
-//            } catch (NoSuchElementException nsee) {
-//                // thrown by nextToken(), but I don't know why it would
-//                break;
-//            }
-//        }
-//
-//        return stringBuffer.toString();
-//    }
-
-    // Wrapping
     //-----------------------------------------------------------------------
     /**
      * <p>Wraps a single line of text, identifying words by <code>' '</code>.</p>
@@ -152,9 +77,9 @@ public class WordUtils {
         }
         int inputLineLength = str.length();
         int offset = 0;
-        StringBuffer wrappedLine = new StringBuffer(inputLineLength + 32);
+        StringBuilder wrappedLine = new StringBuilder(inputLineLength + 32);
 
-        while ((inputLineLength - offset) > wrapLength) {
+        while (inputLineLength - offset > wrapLength) {
             if (str.charAt(offset) == ' ') {
                 offset++;
                 continue;
@@ -252,28 +177,23 @@ public class WordUtils {
      * @see #capitalizeFully(String)
      * @since 1.0
      */
-    public static String capitalize(String str, char[] delimiters) {
-        int delimLen = (delimiters == null ? -1 : delimiters.length);
-        if (str == null || str.length() == 0 || delimLen == 0) {
+    public static String capitalize(String str, char... delimiters) {
+        int delimLen = delimiters == null ? -1 : delimiters.length;
+        if (StringUtils.isEmpty(str) || delimLen == 0) {
             return str;
         }
-        int strLen = str.length();
-        StringBuffer buffer = new StringBuffer(strLen);
+        char[] buffer = str.toCharArray();
         boolean capitalizeNext = true;
-        for (int i = 0; i < strLen; i++) {
-            char ch = str.charAt(i);
-
+        for (int i = 0; i < buffer.length; i++) {
+            char ch = buffer[i];
             if (isDelimiter(ch, delimiters)) {
-                buffer.append(ch);
                 capitalizeNext = true;
             } else if (capitalizeNext) {
-                buffer.append(Character.toTitleCase(ch));
+                buffer[i] = Character.toTitleCase(ch);
                 capitalizeNext = false;
-            } else {
-                buffer.append(ch);
             }
         }
-        return buffer.toString();
+        return new String(buffer);
     }
 
     //-----------------------------------------------------------------------
@@ -326,9 +246,9 @@ public class WordUtils {
      * @return capitalized String, <code>null</code> if null String input
      * @since 1.0
      */
-    public static String capitalizeFully(String str, char[] delimiters) {
-        int delimLen = (delimiters == null ? -1 : delimiters.length);
-        if (str == null || str.length() == 0 || delimLen == 0) {
+    public static String capitalizeFully(String str, char... delimiters) {
+        int delimLen = delimiters == null ? -1 : delimiters.length;
+        if (StringUtils.isEmpty(str) || delimLen == 0) {
             return str;
         }
         str = str.toLowerCase();
@@ -382,28 +302,23 @@ public class WordUtils {
      * @see #capitalize(String)
      * @since 1.0
      */
-    public static String uncapitalize(String str, char[] delimiters) {
-        int delimLen = (delimiters == null ? -1 : delimiters.length);
-        if (str == null || str.length() == 0 || delimLen == 0) {
+    public static String uncapitalize(String str, char... delimiters) {
+        int delimLen = delimiters == null ? -1 : delimiters.length;
+        if (StringUtils.isEmpty(str) || delimLen == 0) {
             return str;
         }
-        int strLen = str.length();
-        StringBuffer buffer = new StringBuffer(strLen);
+        char[] buffer = str.toCharArray();
         boolean uncapitalizeNext = true;
-        for (int i = 0; i < strLen; i++) {
-            char ch = str.charAt(i);
-
+        for (int i = 0; i < buffer.length; i++) {
+            char ch = buffer[i];
             if (isDelimiter(ch, delimiters)) {
-                buffer.append(ch);
                 uncapitalizeNext = true;
             } else if (uncapitalizeNext) {
-                buffer.append(Character.toLowerCase(ch));
+                buffer[i] = Character.toLowerCase(ch);
                 uncapitalizeNext = false;
-            } else {
-                buffer.append(ch);
             }
         }
-        return buffer.toString();
+        return new String(buffer);
     }
 
     //-----------------------------------------------------------------------
@@ -430,35 +345,33 @@ public class WordUtils {
      * @return the changed String, <code>null</code> if null String input
      */
     public static String swapCase(String str) {
-        int strLen;
-        if (str == null || (strLen = str.length()) == 0) {
+        if (StringUtils.isEmpty(str)) {
             return str;
         }
-        StringBuffer buffer = new StringBuffer(strLen);
+        char[] buffer = str.toCharArray();
 
         boolean whitespace = true;
-        char ch = 0;
-        char tmp = 0;
 
-        for (int i = 0; i < strLen; i++) {
-            ch = str.charAt(i);
+        for (int i = 0; i < buffer.length; i++) {
+            char ch = buffer[i];
             if (Character.isUpperCase(ch)) {
-                tmp = Character.toLowerCase(ch);
+                buffer[i] = Character.toLowerCase(ch);
+                whitespace = false;
             } else if (Character.isTitleCase(ch)) {
-                tmp = Character.toLowerCase(ch);
+                buffer[i] = Character.toLowerCase(ch);
+                whitespace = false;
             } else if (Character.isLowerCase(ch)) {
                 if (whitespace) {
-                    tmp = Character.toTitleCase(ch);
+                    buffer[i] = Character.toTitleCase(ch);
+                    whitespace = false;
                 } else {
-                    tmp = Character.toUpperCase(ch);
+                    buffer[i] = Character.toUpperCase(ch);
                 }
             } else {
-                tmp = ch;
+                whitespace = Character.isWhitespace(ch);
             }
-            buffer.append(tmp);
-            whitespace = Character.isWhitespace(ch);
         }
-        return buffer.toString();
+        return new String(buffer);
     }
 
     //-----------------------------------------------------------------------
@@ -515,8 +428,8 @@ public class WordUtils {
      * @see #initials(String)
      * @since 1.0
      */
-    public static String initials(String str, char[] delimiters) {
-        if (str == null || str.length() == 0) {
+    public static String initials(String str, char... delimiters) {
+        if (StringUtils.isEmpty(str)) {
             return str;
         }
         if (delimiters != null && delimiters.length == 0) {
@@ -535,7 +448,7 @@ public class WordUtils {
                 buf[count++] = ch;
                 lastWasGap = false;
             } else {
-                // ignore ch
+                continue; // ignore ch
             }
         }
         return new String(buf, 0, count);
@@ -553,75 +466,12 @@ public class WordUtils {
         if (delimiters == null) {
             return Character.isWhitespace(ch);
         }
-        for (int i = 0, isize = delimiters.length; i < isize; i++) {
-            if (ch == delimiters[i]) {
+        for (char delimiter : delimiters) {
+            if (ch == delimiter) {
                 return true;
             }
         }
         return false;
-    }
-
-    //-----------------------------------------------------------------------
-    /**
-     * Abbreviates a string nicely.
-     *
-     * This method searches for the first space after the lower limit and abbreviates
-     * the String there. It will also append any String passed as a parameter
-     * to the end of the String. The upper limit can be specified to forcibly
-     * abbreviate a String.
-     *
-     * @param str         the string to be abbreviated. If null is passed, null is returned.
-     *                    If the empty String is passed, the empty string is returned.
-     * @param lower       the lower limit.
-     * @param upper       the upper limit; specify -1 if no limit is desired.
-     *                    If the upper limit is lower than the lower limit, it will be
-     *                    adjusted to be the same as the lower limit.
-     * @param appendToEnd String to be appended to the end of the abbreviated string.
-     *                    This is appended ONLY if the string was indeed abbreviated.
-     *                    The append does not count towards the lower or upper limits.
-     * @return the abbreviated String.
-     * @since 1.0
-     */
-    public static String abbreviate(String str, int lower, int upper, String appendToEnd) {
-        // initial parameter checks
-        if (str == null) {
-            return null;
-        }
-        if (str.length() == 0) {
-            return StringUtils.EMPTY;
-        }
-
-        // if the lower value is greater than the length of the string,
-        // set to the length of the string
-        if (lower > str.length()) {
-            lower = str.length();
-        }
-        // if the upper value is -1 (i.e. no limit) or is greater
-        // than the length of the string, set to the length of the string
-        if (upper == -1 || upper > str.length()) {
-            upper = str.length();
-        }
-        // if upper is less than lower, raise it to lower
-        if (upper < lower) {
-            upper = lower;
-        }
-
-        StringBuffer result = new StringBuffer();
-        int index = StringUtils.indexOf(str, " ", lower);
-        if (index == -1) {
-            result.append(str.substring(0, upper));
-            // only if abbreviation has occured do we append the appendToEnd value
-            if (upper != str.length()) {
-                result.append(StringUtils.defaultString(appendToEnd));
-            }
-        } else if (index > upper) {
-            result.append(str.substring(0, upper));
-            result.append(StringUtils.defaultString(appendToEnd));
-        } else {
-            result.append(str.substring(0, index));
-            result.append(StringUtils.defaultString(appendToEnd));
-        }
-        return result.toString();
     }
 
 }

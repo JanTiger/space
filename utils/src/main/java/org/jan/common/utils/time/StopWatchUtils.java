@@ -261,7 +261,7 @@ public class StopWatchUtils {
      * </p>
      *
      * @return the time in nanoseconds
-     * @since 3.0
+     * @since 1.0
      */
     public long getNanoTime() {
         if (this.runningState == STATE_STOPPED || this.runningState == STATE_SUSPENDED) {
@@ -305,7 +305,7 @@ public class StopWatchUtils {
      *
      * @throws IllegalStateException
      *             if the StopWatch has not yet been split.
-     * @since 3.0
+     * @since 1.0
      */
     public long getSplitNanoTime() {
         if (this.splitState != STATE_SPLIT) {

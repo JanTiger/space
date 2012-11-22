@@ -6,14 +6,7 @@ import java.math.BigInteger;
 /**
  * <p>Provides extra functionality for Java Number classes.</p>
  *
- * @author Apache Software Foundation
- * @author <a href="mailto:rand_mcneely@yahoo.com">Rand McNeely</a>
- * @author <a href="mailto:steve.downey@netfolio.com">Steve Downey</a>
- * @author Eric Pugh
- * @author Phil Steitz
- * @author Matthew Hawthorne
- * @author <a href="mailto:ggregory@seagullsw.com">Gary Gregory</a>
- * @author <a href="mailto:fredrik@westermarck.com">Fredrik Westermarck</a>
+ * @author Jan.Wong
  * @since 1.0
  */
 public class NumberUtils {

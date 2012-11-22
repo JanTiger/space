@@ -4,11 +4,8 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeSet;
 
 /**
@@ -20,7 +17,6 @@ import java.util.TreeSet;
  *
  * <p>#ThreadSafe#</p>
  * @since 1.0
- * @version $Id: ObjectUtils.java 1199894 2011-11-09 17:53:59Z ggregory $
  */
 //@Immutable
 public class ObjectUtils {
@@ -96,7 +92,7 @@ public class ObjectUtils {
      * @param values  the values to test, may be {@code null} or empty
      * @return the first value from {@code values} which is not {@code null},
      *  or {@code null} if there are no non-null values
-     * @since 3.0
+     * @since 1.0
      */
     public static <T> T firstNonNull(T... values) {
         if (values != null) {
@@ -174,7 +170,7 @@ public class ObjectUtils {
      *
      * @param obj  the object to obtain the hash code of, may be {@code null}
      * @return the hash code of the object, or zero if null
-     * @since 2.1
+     * @since 1.0
      */
     public static int hashCode(Object obj) {
         // hashCode(Object) retained for performance, as hash code is often critical
@@ -199,7 +195,7 @@ public class ObjectUtils {
      *
      * @param objects  the objects to obtain the hash code of, may be {@code null}
      * @return the hash code of the objects, or zero if null
-     * @since 3.0
+     * @since 1.0
      */
     public static int hashCodeMulti(Object... objects) {
         int hash = 1;
@@ -251,7 +247,7 @@ public class ObjectUtils {
      *
      * @param buffer  the buffer to append to
      * @param object  the object to create a toString for
-     * @since 2.4
+     * @since 1.0
      */
     public static void identityToString(StringBuffer buffer, Object object) {
         if (object == null) {
@@ -279,7 +275,7 @@ public class ObjectUtils {
      * @see String#valueOf(Object)
      * @param obj  the Object to {@code toString}, may be null
      * @return the passed in Object's toString, or nullStr if {@code null} input
-     * @since 2.0
+     * @since 1.0
      */
     public static String toString(Object obj) {
         return obj == null ? "" : obj.toString();
@@ -302,7 +298,7 @@ public class ObjectUtils {
      * @param obj  the Object to {@code toString}, may be null
      * @param nullStr  the String to return if {@code null} input, may be null
      * @return the passed in Object's toString, or nullStr if {@code null} input
-     * @since 2.0
+     * @since 1.0
      */
     public static String toString(Object obj, String nullStr) {
         return obj == null ? nullStr : obj.toString();
@@ -426,7 +422,7 @@ public class ObjectUtils {
      * @return T at middle position
      * @throws NullPointerException if items is {@code null}
      * @throws IllegalArgumentException if items is empty or contains {@code null} values
-     * @since 3.0.1
+     * @since 1.0
      */
     public static <T extends Comparable<? super T>> T median(T... items) {
         notEmpty(items, "");
@@ -447,7 +443,7 @@ public class ObjectUtils {
      * @return T at middle position
      * @throws NullPointerException if items or comparator is {@code null}
      * @throws IllegalArgumentException if items is empty or contains {@code null} values
-     * @since 3.0.1
+     * @since 1.0
      */
     public static <T> T median(Comparator<T> comparator, T... items) {
         notEmpty(items, "null/empty items");
@@ -470,7 +466,7 @@ public class ObjectUtils {
      * @param obj  the object to clone, null returns null
      * @return the clone if the object implements {@link Cloneable} otherwise {@code null}
      * @throws CloneFailedException if the object is cloneable and the clone operation fails
-     * @since 3.0
+     * @since 1.0
      */
     public static <T> T clone(final T obj) {
         if (obj instanceof Cloneable) {
@@ -524,7 +520,7 @@ public class ObjectUtils {
      * @param obj  the object to clone, null returns null
      * @return the clone if the object implements {@link Cloneable} otherwise the object itself
      * @throws CloneFailedException if the object is cloneable and the clone operation fails
-     * @since 3.0
+     * @since 1.0
      */
     public static <T> T cloneIfPossible(final T obj) {
         final T clone = clone(obj);

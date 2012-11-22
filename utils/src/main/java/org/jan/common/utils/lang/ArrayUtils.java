@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.jan.common.utils.reflect.ClassUtils;
 
@@ -4940,7 +4940,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     @SuppressWarnings("unchecked")
     // removeAll() always creates an array of the same type as its input
@@ -4975,7 +4975,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static byte[] removeAll(byte[] array, int... indices) {
         return (byte[]) removeAll((Object) array, clone(indices));
@@ -5008,7 +5008,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static short[] removeAll(short[] array, int... indices) {
         return (short[]) removeAll((Object) array, clone(indices));
@@ -5041,7 +5041,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static int[] removeAll(int[] array, int... indices) {
         return (int[]) removeAll((Object) array, clone(indices));
@@ -5075,7 +5075,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static char[] removeAll(char[] array, int... indices) {
         return (char[]) removeAll((Object) array, clone(indices));
@@ -5109,7 +5109,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static long[] removeAll(long[] array, int... indices) {
         return (long[]) removeAll((Object) array, clone(indices));
@@ -5143,7 +5143,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static float[] removeAll(float[] array, int... indices) {
         return (float[]) removeAll((Object) array, clone(indices));
@@ -5177,7 +5177,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static double[] removeAll(double[] array, int... indices) {
         return (double[]) removeAll((Object) array, clone(indices));
@@ -5207,7 +5207,7 @@ public class ArrayUtils {
      *         at the specified positions.
      * @throws IndexOutOfBoundsException if any index is out of range
      * (index < 0 || index >= array.length), or if the array is {@code null}.
-     * @since 3.0.1
+     * @since 1.0
      */
     public static boolean[] removeAll(boolean[] array, int... indices) {
         return (boolean[]) removeAll((Object) array, clone(indices));
@@ -5262,21 +5262,6 @@ public class ArrayUtils {
     }
 
     /**
-     * Extract a set of Integer indices into an int[].
-     * @param coll {@code HashSet} of {@code Integer}
-     * @return int[]
-     * @since 1.0
-     */
-    private static int[] extractIndices(HashSet<Integer> coll) {
-        int[] result = new int[coll.size()];
-        int i = 0;
-        for (Integer index : coll) {
-            result[i++] = index.intValue();
-        }
-        return result;
-    }
-
-    /**
      * Converts the given Collection into an array of Strings. The returned array does not contain <code>null</code>
      * entries. Note that {@link Arrays#sort(Object[])} will throw an {@link NullPointerException} if an array element
      * is <code>null</code>.
@@ -5285,7 +5270,7 @@ public class ArrayUtils {
      *            The collection to convert
      * @return A new array of Strings.
      */
-    static String[] toNoNullStringArray(Collection collection) {
+    static String[] toNoNullStringArray(Collection<?> collection) {
         if (collection == null) {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
@@ -5302,7 +5287,7 @@ public class ArrayUtils {
      * @return The given array or a new array without null.
      */
     static String[] toNoNullStringArray(Object[] array) {
-        List list = new ArrayList(array.length);
+        List<String> list = new ArrayList<String>(array.length);
         for (int i = 0; i < array.length; i++) {
             Object e = array[i];
             if (e != null) {
@@ -5314,6 +5299,7 @@ public class ArrayUtils {
 
 }
 abstract class ToStringStyle implements Serializable {
+    private static final long serialVersionUID = -1078081122889188948L;
 
     /**
      * The default toString style. Using the Using the <code>Person</code>
@@ -5378,13 +5364,8 @@ abstract class ToStringStyle implements Serializable {
      * to detect cyclical object references and avoid infinite loops.
      * </p>
      */
-    private static ThreadLocal registry = new ThreadLocal() {
-        protected Object initialValue() {
-            // The HashSet implementation is not synchronized,
-            // which is just what we need here.
-            return new HashSet();
-        }
-    };
+    private static final ThreadLocal<WeakHashMap<Object, Object>> REGISTRY =
+        new ThreadLocal<WeakHashMap<Object,Object>>();
 
     /**
      * <p>
@@ -5394,8 +5375,8 @@ abstract class ToStringStyle implements Serializable {
      *
      * @return Set the registry of objects being traversed
      */
-    static Set getRegistry() {
-        return (Set) registry.get();
+    static Map<Object, Object> getRegistry() {
+        return REGISTRY.get();
     }
 
     /**
@@ -5410,7 +5391,8 @@ abstract class ToStringStyle implements Serializable {
      *             object.
      */
     static boolean isRegistered(Object value) {
-        return getRegistry().contains(value);
+        Map<Object, Object> m = getRegistry();
+        return m != null && m.containsKey(value);
     }
 
     /**
@@ -5424,7 +5406,11 @@ abstract class ToStringStyle implements Serializable {
      */
     static void register(Object value) {
         if (value != null) {
-            getRegistry().add(value);
+            Map<Object, Object> m = getRegistry();
+            if (m == null) {
+                REGISTRY.set(new WeakHashMap<Object, Object>());
+            }
+            getRegistry().put(value, null);
         }
     }
 
@@ -5441,7 +5427,15 @@ abstract class ToStringStyle implements Serializable {
      *                  The object to unregister.
      */
     static void unregister(Object value) {
-        getRegistry().remove(value);
+        if (value != null) {
+            Map<Object, Object> m = getRegistry();
+            if (m != null) {
+                m.remove(value);
+                if (m.isEmpty()) {
+                    REGISTRY.remove();
+                }
+            }
+        }
     }
 
     /**
@@ -5705,18 +5699,18 @@ abstract class ToStringStyle implements Serializable {
         register(value);
 
         try {
-            if (value instanceof Collection) {
+            if (value instanceof Collection<?>) {
                 if (detail) {
-                    appendDetail(buffer, fieldName, (Collection) value);
+                    appendDetail(buffer, fieldName, (Collection<?>) value);
                 } else {
-                    appendSummarySize(buffer, fieldName, ((Collection) value).size());
+                    appendSummarySize(buffer, fieldName, ((Collection<?>) value).size());
                 }
 
-            } else if (value instanceof Map) {
+            } else if (value instanceof Map<?, ?>) {
                 if (detail) {
-                    appendDetail(buffer, fieldName, (Map) value);
+                    appendDetail(buffer, fieldName, (Map<?, ?>) value);
                 } else {
-                    appendSummarySize(buffer, fieldName, ((Map) value).size());
+                    appendSummarySize(buffer, fieldName, ((Map<?, ?>) value).size());
                 }
 
             } else if (value instanceof long[]) {
@@ -5831,7 +5825,7 @@ abstract class ToStringStyle implements Serializable {
      * @param coll  the <code>Collection</code> to add to the
      *  <code>toString</code>, not <code>null</code>
      */
-    protected void appendDetail(StringBuffer buffer, String fieldName, Collection coll) {
+    protected void appendDetail(StringBuffer buffer, String fieldName, Collection<?> coll) {
         buffer.append(coll);
     }
 
@@ -5843,7 +5837,7 @@ abstract class ToStringStyle implements Serializable {
      * @param map  the <code>Map</code> to add to the <code>toString</code>,
      *  not <code>null</code>
      */
-    protected void appendDetail(StringBuffer buffer, String fieldName, Map map) {
+    protected void appendDetail(StringBuffer buffer, String fieldName, Map<?, ?> map) {
         buffer.append(map);
     }
 
@@ -6814,7 +6808,7 @@ abstract class ToStringStyle implements Serializable {
      * @param cls  the <code>Class</code> to get the short name of
      * @return the short name
      */
-    protected String getShortClassName(Class cls) {
+    protected String getShortClassName(Class<?> cls) {
         return ClassUtils.getShortClassName(cls);
     }
 
@@ -7514,13 +7508,7 @@ class HashCodeBuilder {
      *
      * @since 1.0
      */
-    private static ThreadLocal registry = new ThreadLocal() {
-        protected Object initialValue() {
-            // The HashSet implementation is not synchronized,
-            // which is just what we need here.
-            return new HashSet();
-        }
-    };
+    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<Set<IDKey>>();
 
     /**
      * <p>
@@ -7530,10 +7518,9 @@ class HashCodeBuilder {
      * @return Set the registry of objects being traversed
      * @since 1.0
      */
-    static Set getRegistry() {
-        return (Set) registry.get();
+    static Set<IDKey> getRegistry() {
+        return REGISTRY.get();
     }
-
     /**
      * <p>
      * Returns <code>true</code> if the registry contains the given object. Used by the reflection methods to avoid
@@ -7546,7 +7533,8 @@ class HashCodeBuilder {
      * @since 1.0
      */
     static boolean isRegistered(Object value) {
-        return getRegistry().contains(toIdentityHashCodeInteger(value));
+        Set<IDKey> registry = getRegistry();
+        return registry != null && registry.contains(new IDKey(value));
     }
 
     /**
@@ -7565,7 +7553,7 @@ class HashCodeBuilder {
      * @param excludeFields
      *            Collection of String field names to exclude from use in calculation of hash code
      */
-    private static void reflectionAppend(Object object, Class clazz, HashCodeBuilder builder, boolean useTransients,
+    private static void reflectionAppend(Object object, Class<?> clazz, HashCodeBuilder builder, boolean useTransients,
             String[] excludeFields) {
         if (isRegistered(object)) {
             return;
@@ -7573,11 +7561,9 @@ class HashCodeBuilder {
         try {
             register(object);
             Field[] fields = clazz.getDeclaredFields();
-            List excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;
             AccessibleObject.setAccessible(fields, true);
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                if (!excludedFieldList.contains(field.getName())
+            for (Field field : fields) {
+                if (!ArrayUtils.contains(excludeFields, field.getName())
                     && (field.getName().indexOf('$') == -1)
                     && (useTransients || !Modifier.isTransient(field.getModifiers()))
                     && (!Modifier.isStatic(field.getModifiers()))) {
@@ -7634,7 +7620,7 @@ class HashCodeBuilder {
      *             if the number is zero or even
      */
     public static int reflectionHashCode(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber, Object object) {
-        return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, false, null, null);
+        return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, false, null);
     }
 
     /**
@@ -7678,30 +7664,7 @@ class HashCodeBuilder {
      */
     public static int reflectionHashCode(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber, Object object,
             boolean testTransients) {
-        return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, testTransients, null,
-                null);
-    }
-
-    /**
-     * Calls {@link #reflectionHashCode(int, int, Object, boolean, Class, String[])} with excludeFields set to
-     * <code>null</code>.
-     *
-     * @param initialNonZeroOddNumber
-     *            a non-zero, odd number used as the initial value
-     * @param multiplierNonZeroOddNumber
-     *            a non-zero, odd number used as the multiplier
-     * @param object
-     *            the Object to create a <code>hashCode</code> for
-     * @param testTransients
-     *            whether to include transient fields
-     * @param reflectUpToClass
-     *            the superclass to reflect up to (inclusive), may be <code>null</code>
-     * @return int hash code
-     */
-    public static int reflectionHashCode(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber, Object object,
-            boolean testTransients, Class reflectUpToClass) {
-        return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, testTransients,
-                reflectUpToClass, null);
+        return reflectionHashCode(initialNonZeroOddNumber, multiplierNonZeroOddNumber, object, testTransients, null);
     }
 
     /**
@@ -7729,6 +7692,7 @@ class HashCodeBuilder {
      * Two randomly chosen, non-zero, odd numbers must be passed in. Ideally these should be different for each class,
      * however this is not vital. Prime numbers are preferred, especially for the multiplier.
      * </p>
+     * @param <T>
      *
      * @param initialNonZeroOddNumber
      *            a non-zero, odd number used as the initial value
@@ -7749,54 +7713,20 @@ class HashCodeBuilder {
      *             if the number is zero or even
      * @since 1.0
      */
-    public static int reflectionHashCode(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber, Object object,
-            boolean testTransients, Class reflectUpToClass, String[] excludeFields) {
+    public static <T> int reflectionHashCode(int initialNonZeroOddNumber, int multiplierNonZeroOddNumber, T object,
+            boolean testTransients, Class<? super T> reflectUpToClass, String... excludeFields) {
 
         if (object == null) {
             throw new IllegalArgumentException("The object to build a hash code for must not be null");
         }
         HashCodeBuilder builder = new HashCodeBuilder(initialNonZeroOddNumber, multiplierNonZeroOddNumber);
-        Class clazz = object.getClass();
+        Class<?> clazz = object.getClass();
         reflectionAppend(object, clazz, builder, testTransients, excludeFields);
         while (clazz.getSuperclass() != null && clazz != reflectUpToClass) {
             clazz = clazz.getSuperclass();
             reflectionAppend(object, clazz, builder, testTransients, excludeFields);
         }
         return builder.toHashCode();
-    }
-
-    /**
-     * <p>
-     * This method uses reflection to build a valid hash code.
-     * </p>
-     *
-     * <p>
-     * This constructor uses two hard coded choices for the constants needed to build a hash code.
-     * </p>
-     *
-     * <p>
-     * It uses <code>AccessibleObject.setAccessible</code> to gain access to private fields. This means that it will
-     * throw a security exception if run under a security manager, if the permissions are not set up correctly. It is
-     * also not as efficient as testing explicitly.
-     * </p>
-     *
-     * <p>
-     * Transient members will be not be used, as they are likely derived fields, and not part of the value of the
-     * <code>Object</code>.
-     * </p>
-     *
-     * <p>
-     * Static fields will not be tested. Superclass fields will be included.
-     * </p>
-     *
-     * @param object
-     *            the Object to create a <code>hashCode</code> for
-     * @return int hash code
-     * @throws IllegalArgumentException
-     *             if the object is <code>null</code>
-     */
-    public static int reflectionHashCode(Object object) {
-        return reflectionHashCode(17, 37, object, false, null, null);
     }
 
     /**
@@ -7832,7 +7762,7 @@ class HashCodeBuilder {
      *             if the object is <code>null</code>
      */
     public static int reflectionHashCode(Object object, boolean testTransients) {
-        return reflectionHashCode(17, 37, object, testTransients, null, null);
+        return reflectionHashCode(17, 37, object, testTransients, null);
     }
 
     /**
@@ -7867,7 +7797,7 @@ class HashCodeBuilder {
      * @throws IllegalArgumentException
      *             if the object is <code>null</code>
      */
-    public static int reflectionHashCode(Object object, Collection /* String */excludeFields) {
+    public static int reflectionHashCode(Object object, Collection<String> excludeFields) {
         return reflectionHashCode(object, ArrayUtils.toNoNullStringArray(excludeFields));
     }
 
@@ -7905,7 +7835,7 @@ class HashCodeBuilder {
      * @throws IllegalArgumentException
      *             if the object is <code>null</code>
      */
-    public static int reflectionHashCode(Object object, String[] excludeFields) {
+    public static int reflectionHashCode(Object object, String... excludeFields) {
         return reflectionHashCode(17, 37, object, false, null, excludeFields);
     }
 
@@ -7918,19 +7848,12 @@ class HashCodeBuilder {
      *            The object to register.
      */
     static void register(Object value) {
-        getRegistry().add(toIdentityHashCodeInteger(value));
-    }
-
-    /**
-     * Returns an Integer for the given object's default hash code.
-     *
-     * @see System#identityHashCode(Object)
-     * @param value
-     *            object for which the hashCode is to be calculated
-     * @return Default int hash code
-     */
-    private static Integer toIdentityHashCodeInteger(Object value) {
-        return new Integer(System.identityHashCode(value));
+        synchronized (HashCodeBuilder.class) {
+            if (getRegistry() == null) {
+                REGISTRY.set(new HashSet<IDKey>());
+            }
+        }
+        getRegistry().add(new IDKey(value));
     }
 
     /**
@@ -7946,7 +7869,17 @@ class HashCodeBuilder {
      * @since 1.0
      */
     static void unregister(Object value) {
-        getRegistry().remove(toIdentityHashCodeInteger(value));
+        Set<IDKey> registry = getRegistry();
+        if (registry != null) {
+            registry.remove(new IDKey(value));
+            synchronized (HashCodeBuilder.class) {
+                //read again
+                registry = getRegistry();
+                if (registry != null && registry.isEmpty()) {
+                    REGISTRY.remove();
+                }
+            }
+        }
     }
 
     /**
@@ -8073,8 +8006,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (byte element : array) {
+                append(element);
             }
         }
         return this;
@@ -8107,8 +8040,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (char element : array) {
+                append(element);
             }
         }
         return this;
@@ -8140,8 +8073,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (double element : array) {
+                append(element);
             }
         }
         return this;
@@ -8174,8 +8107,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (float element : array) {
+                append(element);
             }
         }
         return this;
@@ -8208,8 +8141,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (int element : array) {
+                append(element);
             }
         }
         return this;
@@ -8247,8 +8180,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (long element : array) {
+                append(element);
             }
         }
         return this;
@@ -8309,8 +8242,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (Object element : array) {
+                append(element);
             }
         }
         return this;
@@ -8343,8 +8276,8 @@ class HashCodeBuilder {
         if (array == null) {
             iTotal = iTotal * iConstant;
         } else {
-            for (int i = 0; i < array.length; i++) {
-                append(array[i]);
+            for (short element : array) {
+                append(element);
             }
         }
         return this;
@@ -8363,6 +8296,17 @@ class HashCodeBuilder {
     public HashCodeBuilder appendSuper(int superHashCode) {
         iTotal = iTotal * iConstant + superHashCode;
         return this;
+    }
+
+    /**
+     * Returns the computed <code>hashCode</code>.
+     *
+     * @return <code>hashCode</code> based on the fields appended
+     *
+     * @since 1.0
+     */
+    public Integer build() {
+        return Integer.valueOf(toHashCode());
     }
 
     /**
@@ -8413,32 +8357,10 @@ class EqualsBuilder {
      *
      * @param lhs  <code>this</code> object
      * @param rhs  the other object
-     * @return <code>true</code> if the two Objects have tested equals.
-     */
-    public static boolean reflectionEquals(Object lhs, Object rhs) {
-        return reflectionEquals(lhs, rhs, false, null, null);
-    }
-
-    /**
-     * <p>This method uses reflection to determine if the two <code>Object</code>s
-     * are equal.</p>
-     *
-     * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
-     * fields. This means that it will throw a security exception if run under
-     * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly.</p>
-     *
-     * <p>Transient members will be not be tested, as they are likely derived
-     * fields, and not part of the value of the Object.</p>
-     *
-     * <p>Static fields will not be tested. Superclass fields will be included.</p>
-     *
-     * @param lhs  <code>this</code> object
-     * @param rhs  the other object
      * @param excludeFields  Collection of String field names to exclude from testing
      * @return <code>true</code> if the two Objects have tested equals.
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs, Collection /*String*/ excludeFields) {
+    public static boolean reflectionEquals(Object lhs, Object rhs, Collection<String> excludeFields) {
         return reflectionEquals(lhs, rhs, ArrayUtils.toNoNullStringArray(excludeFields));
     }
 
@@ -8461,7 +8383,7 @@ class EqualsBuilder {
      * @param excludeFields  array of field names to exclude from testing
      * @return <code>true</code> if the two Objects have tested equals.
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs, String[] excludeFields) {
+    public static boolean reflectionEquals(Object lhs, Object rhs, String... excludeFields) {
         return reflectionEquals(lhs, rhs, false, null, excludeFields);
     }
 
@@ -8486,36 +8408,7 @@ class EqualsBuilder {
      * @return <code>true</code> if the two Objects have tested equals.
      */
     public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients) {
-        return reflectionEquals(lhs, rhs, testTransients, null, null);
-    }
-
-    /**
-     * <p>This method uses reflection to determine if the two <code>Object</code>s
-     * are equal.</p>
-     *
-     * <p>It uses <code>AccessibleObject.setAccessible</code> to gain access to private
-     * fields. This means that it will throw a security exception if run under
-     * a security manager, if the permissions are not set up correctly. It is also
-     * not as efficient as testing explicitly.</p>
-     *
-     * <p>If the testTransients parameter is set to <code>true</code>, transient
-     * members will be tested, otherwise they are ignored, as they are likely
-     * derived fields, and not part of the value of the <code>Object</code>.</p>
-     *
-     * <p>Static fields will not be included. Superclass fields will be appended
-     * up to and including the specified superclass. A null superclass is treated
-     * as java.lang.Object.</p>
-     *
-     * @param lhs  <code>this</code> object
-     * @param rhs  the other object
-     * @param testTransients  whether to include transient fields
-     * @param reflectUpToClass  the superclass to reflect up to (inclusive),
-     *  may be <code>null</code>
-     * @return <code>true</code> if the two Objects have tested equals.
-     * @since 1.0
-     */
-    public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass) {
-        return reflectionEquals(lhs, rhs, testTransients, reflectUpToClass, null);
+        return reflectionEquals(lhs, rhs, testTransients, null);
     }
 
     /**
@@ -8544,8 +8437,8 @@ class EqualsBuilder {
      * @return <code>true</code> if the two Objects have tested equals.
      * @since 1.0
      */
-    public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class reflectUpToClass,
-            String[] excludeFields) {
+    public static boolean reflectionEquals(Object lhs, Object rhs, boolean testTransients, Class<?> reflectUpToClass,
+            String... excludeFields) {
         if (lhs == rhs) {
             return true;
         }
@@ -8556,9 +8449,9 @@ class EqualsBuilder {
         // class or in classes between the leaf and root.
         // If we are not testing transients or a subclass has no ivars,
         // then a subclass can test equals to a superclass.
-        Class lhsClass = lhs.getClass();
-        Class rhsClass = rhs.getClass();
-        Class testClass;
+        Class<?> lhsClass = lhs.getClass();
+        Class<?> rhsClass = rhs.getClass();
+        Class<?> testClass;
         if (lhsClass.isInstance(rhs)) {
             testClass = lhsClass;
             if (!rhsClass.isInstance(lhs)) {
@@ -8607,16 +8500,15 @@ class EqualsBuilder {
     private static void reflectionAppend(
         Object lhs,
         Object rhs,
-        Class clazz,
+        Class<?> clazz,
         EqualsBuilder builder,
         boolean useTransients,
         String[] excludeFields) {
         Field[] fields = clazz.getDeclaredFields();
-        List excludedFieldList = excludeFields != null ? Arrays.asList(excludeFields) : Collections.EMPTY_LIST;
         AccessibleObject.setAccessible(fields, true);
         for (int i = 0; i < fields.length && builder.isEquals; i++) {
             Field f = fields[i];
-            if (!excludedFieldList.contains(f.getName())
+            if (!ArrayUtils.contains(excludeFields, f.getName())
                 && (f.getName().indexOf('$') == -1)
                 && (useTransients || !Modifier.isTransient(f.getModifiers()))
                 && (!Modifier.isStatic(f.getModifiers()))) {
@@ -8669,7 +8561,7 @@ class EqualsBuilder {
             this.setEquals(false);
             return this;
         }
-        Class lhsClass = lhs.getClass();
+        Class<?> lhsClass = lhs.getClass();
         if (!lhsClass.isArray()) {
             if (lhs instanceof java.math.BigDecimal) {
                 isEquals = (((java.math.BigDecimal)lhs).compareTo((BigDecimal) rhs) == 0);
@@ -9130,6 +9022,19 @@ class EqualsBuilder {
     }
 
     /**
+     * <p>Returns <code>true</code> if the fields that have been checked
+     * are all equal.</p>
+     *
+     * @return <code>true</code> if all of the fields that have been checked
+     *         are equal, <code>false</code> otherwise.
+     *
+     * @since 1.0
+     */
+    public Boolean build() {
+        return Boolean.valueOf(isEquals());
+    }
+
+    /**
      * Sets the <code>isEquals</code> value.
      *
      * @param isEquals The value to set.
@@ -9138,4 +9043,48 @@ class EqualsBuilder {
     protected void setEquals(boolean isEquals) {
         this.isEquals = isEquals;
     }
+}
+final class IDKey {
+    private final Object value;
+    private final int id;
+
+    /**
+     * Constructor for IDKey
+     * @param _value The value
+     */
+    public IDKey(Object _value) {
+        // This is the Object hashcode
+        id = System.identityHashCode(_value);
+        // There have been some cases (LANG-459) that return the
+        // same identity hash code for different objects.  So
+        // the value is also added to disambiguate these cases.
+        value = _value;
+    }
+
+    /**
+     * returns hashcode - i.e. the system identity hashcode.
+     * @return the hashcode
+     */
+    @Override
+    public int hashCode() {
+       return id;
+    }
+
+    /**
+     * checks if instances are equal
+     * @param other The other object to compare to
+     * @return if the instances are for the same object
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof IDKey)) {
+            return false;
+        }
+        IDKey idKey = (IDKey) other;
+        if (id != idKey.id) {
+            return false;
+        }
+        // Note that identity equals is used.
+        return value == idKey.value;
+     }
 }

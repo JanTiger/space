@@ -8,8 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jan.common.utils.StrBuilder;
-
 /**
  * <p>Escapes and unescapes <code>String</code>s for
  * Java, Java Script, HTML, XML, and SQL.</p>
@@ -291,7 +289,7 @@ public class StringEscapeUtils {
             return;
         }
         int sz = str.length();
-        StrBuilder unicode = new StrBuilder(4);
+        StringBuilder unicode = new StringBuilder(4);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++) {

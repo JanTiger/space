@@ -15,7 +15,6 @@ import java.io.File;
  * </p>
  *
  * @since 1.0
- * @version $Id: SystemUtils.java 1199816 2011-11-09 16:11:34Z bayard $
  */
 public class SystemUtils {
 
@@ -68,7 +67,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final String AWT_TOOLKIT = getSystemProperty("awt.toolkit");
 
@@ -89,7 +88,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.2
      */
     public static final String FILE_ENCODING = getSystemProperty("file.encoding");
@@ -126,7 +125,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final String JAVA_AWT_FONTS = getSystemProperty("java.awt.fonts");
 
@@ -144,7 +143,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final String JAVA_AWT_GRAPHICSENV = getSystemProperty("java.awt.graphicsenv");
 
@@ -164,7 +163,7 @@ public class SystemUtils {
      * </p>
      *
      * @see #isJavaAwtHeadless()
-     * @since 2.1
+     * @since 1.0
      * @since Java 1.4
      */
     public static final String JAVA_AWT_HEADLESS = getSystemProperty("java.awt.headless");
@@ -183,7 +182,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final String JAVA_AWT_PRINTERJOB = getSystemProperty("java.awt.printerjob");
 
@@ -346,7 +345,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.3
      */
     public static final String JAVA_RUNTIME_NAME = getSystemProperty("java.runtime.name");
@@ -365,7 +364,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.3
      */
     public static final String JAVA_RUNTIME_VERSION = getSystemProperty("java.runtime.version");
@@ -439,7 +438,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      * @since Java 1.4
      */
     public static final String JAVA_UTIL_PREFS_PREFERENCES_FACTORY =
@@ -513,7 +512,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.2
      */
     public static final String JAVA_VM_INFO = getSystemProperty("java.vm.info");
@@ -731,7 +730,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.2
      */
     public static final String USER_COUNTRY = getSystemProperty("user.country") == null ?
@@ -787,7 +786,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      * @since Java 1.2
      */
     public static final String USER_LANGUAGE = getSystemProperty("user.language");
@@ -824,7 +823,7 @@ public class SystemUtils {
      * sync with that System property.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final String USER_TIMEZONE = getSystemProperty("user.timezone");
 
@@ -901,7 +900,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
      * </p>
      *
-     * @since 3.0
+     * @since 1.0
      */
     public static final boolean IS_JAVA_1_7 = getJavaVersionMatches("1.7");
 
@@ -921,7 +920,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_AIX = getOSMatchesName("AIX");
 
@@ -933,7 +932,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_HP_UX = getOSMatchesName("HP-UX");
 
@@ -945,7 +944,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_IRIX = getOSMatchesName("Irix");
 
@@ -957,7 +956,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_LINUX = getOSMatchesName("Linux") || getOSMatchesName("LINUX");
 
@@ -969,7 +968,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_MAC = getOSMatchesName("Mac");
 
@@ -981,7 +980,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_MAC_OSX = getOSMatchesName("Mac OS X");
 
@@ -993,7 +992,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.1
+     * @since 1.0
      */
     public static final boolean IS_OS_FREE_BSD = getOSMatchesName("FreeBSD");
 
@@ -1005,7 +1004,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.1
+     * @since 1.0
      */
     public static final boolean IS_OS_OPEN_BSD = getOSMatchesName("OpenBSD");
 
@@ -1017,7 +1016,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.1
+     * @since 1.0
      */
     public static final boolean IS_OS_NET_BSD = getOSMatchesName("NetBSD");
 
@@ -1029,7 +1028,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_OS2 = getOSMatchesName("OS/2");
 
@@ -1041,7 +1040,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_SOLARIS = getOSMatchesName("Solaris");
 
@@ -1053,7 +1052,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_SUN_OS = getOSMatchesName("SunOS");
 
@@ -1065,7 +1064,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.1
+     * @since 1.0
      */
     public static final boolean IS_OS_UNIX = IS_OS_AIX || IS_OS_HP_UX || IS_OS_IRIX || IS_OS_LINUX || IS_OS_MAC_OSX
             || IS_OS_SOLARIS || IS_OS_SUN_OS || IS_OS_FREE_BSD || IS_OS_OPEN_BSD || IS_OS_NET_BSD;
@@ -1078,7 +1077,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS = getOSMatchesName(OS_NAME_WINDOWS_PREFIX);
 
@@ -1090,7 +1089,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_2000 = getOSMatches(OS_NAME_WINDOWS_PREFIX, "5.0");
 
@@ -1102,7 +1101,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.1
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_2003 = getOSMatches(OS_NAME_WINDOWS_PREFIX, "5.2");
 
@@ -1114,7 +1113,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.1
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_2008 = getOSMatches(OS_NAME_WINDOWS_PREFIX + " Server 2008", "6.1");
 
@@ -1126,7 +1125,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_95 = getOSMatches(OS_NAME_WINDOWS_PREFIX + " 9", "4.0");
     // Java 1.2 running on Windows98 returns 'Windows 95', hence the above
@@ -1139,7 +1138,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_98 = getOSMatches(OS_NAME_WINDOWS_PREFIX + " 9", "4.1");
     // Java 1.2 running on Windows98 returns 'Windows 95', hence the above
@@ -1152,7 +1151,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_ME = getOSMatches(OS_NAME_WINDOWS_PREFIX, "4.9");
     // Java 1.2 running on WindowsME may return 'Windows 95', hence the above
@@ -1165,7 +1164,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_NT = getOSMatchesName(OS_NAME_WINDOWS_PREFIX + " NT");
     // Windows 2000 returns 'Windows 2000' but may suffer from same Java1.2 problem
@@ -1178,7 +1177,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_XP = getOSMatches(OS_NAME_WINDOWS_PREFIX, "5.1");
 
@@ -1191,7 +1190,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 2.4
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_VISTA = getOSMatches(OS_NAME_WINDOWS_PREFIX, "6.0");
 
@@ -1203,7 +1202,7 @@ public class SystemUtils {
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
      * </p>
      *
-     * @since 3.0
+     * @since 1.0
      */
     public static final boolean IS_OS_WINDOWS_7 = getOSMatches(OS_NAME_WINDOWS_PREFIX, "6.1");
 
@@ -1216,7 +1215,7 @@ public class SystemUtils {
      * @throws SecurityException if a security manager exists and its {@code checkPropertyAccess} method doesn't allow
      * access to the specified system property.
      * @see System#getProperty(String)
-     * @since 2.1
+     * @since 1.0
      */
     public static File getJavaHome() {
         return new File(System.getProperty(JAVA_HOME_KEY));
@@ -1231,7 +1230,7 @@ public class SystemUtils {
      * @throws SecurityException if a security manager exists and its {@code checkPropertyAccess} method doesn't allow
      * access to the specified system property.
      * @see System#getProperty(String)
-     * @since 2.1
+     * @since 1.0
      */
     public static File getJavaIoTmpDir() {
         return new File(System.getProperty(JAVA_IO_TMPDIR_KEY));
@@ -1303,7 +1302,7 @@ public class SystemUtils {
      * @throws SecurityException if a security manager exists and its {@code checkPropertyAccess} method doesn't allow
      * access to the specified system property.
      * @see System#getProperty(String)
-     * @since 2.1
+     * @since 1.0
      */
     public static File getUserDir() {
         return new File(System.getProperty(USER_DIR_KEY));
@@ -1318,7 +1317,7 @@ public class SystemUtils {
      * @throws SecurityException if a security manager exists and its {@code checkPropertyAccess} method doesn't allow
      * access to the specified system property.
      * @see System#getProperty(String)
-     * @since 2.1
+     * @since 1.0
      */
     public static File getUserHome() {
         return new File(System.getProperty(USER_HOME_KEY));
@@ -1329,7 +1328,7 @@ public class SystemUtils {
      *
      * @return {@code true} if {@code JAVA_AWT_HEADLESS} is {@code "true"}, {@code false} otherwise.
      * @see #JAVA_AWT_HEADLESS
-     * @since 2.1
+     * @since 1.0
      * @since Java 1.4
      */
     public static boolean isJavaAwtHeadless() {

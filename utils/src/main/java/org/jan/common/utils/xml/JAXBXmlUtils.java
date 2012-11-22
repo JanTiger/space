@@ -62,7 +62,7 @@ public class JAXBXmlUtils {
             noNamespaceFilter.setParent(XMLReaderFactory.createXMLReader());
             Unmarshaller unmarshaller = JAXBContext.newInstance(clazz).createUnmarshaller();
             SAXSource source = new SAXSource(noNamespaceFilter, new InputSource(inputStream));
-            return (T) unmarshaller.unmarshal(source);
+            return unmarshaller.unmarshal(source, clazz).getValue();
         } catch (JAXBException e) {
             e.printStackTrace();
         } catch (SAXException e) {

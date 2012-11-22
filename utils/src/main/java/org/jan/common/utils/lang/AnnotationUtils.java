@@ -23,8 +23,7 @@ import org.jan.common.utils.reflect.ClassUtils;
  *
  * <p>#ThreadSafe#</p>
  *
- * @since 3.0
- * @version $Id: AnnotationUtils.java 1083850 2011-03-21 15:59:10Z mbenson $
+ * @since 1.0
  */
 public class AnnotationUtils {
 
@@ -111,8 +110,8 @@ public class AnnotationUtils {
         }
         Class<? extends Annotation> type = a1.annotationType();
         Class<? extends Annotation> type2 = a2.annotationType();
-        Validate.notNull(type, "Annotation %s with null annotationType()", a1);
-        Validate.notNull(type2, "Annotation %s with null annotationType()", a2);
+        notNull(type, a1);
+        notNull(type, a2);
         if (!type.equals(type2)) {
             return false;
         }
@@ -133,6 +132,11 @@ public class AnnotationUtils {
             return false;
         }
         return true;
+    }
+
+    private static void notNull(Class<? extends Annotation> type, Annotation a){
+        if(null == type)
+            throw new NullPointerException(String.format("Annotation %s with null annotationType()", a));
     }
 
     /**
@@ -176,20 +180,22 @@ public class AnnotationUtils {
      * {@code null}
      */
     public static String toString(final Annotation a) {
-        ToStringBuilder builder = new ToStringBuilder(a, TO_STRING_STYLE);
+        StringBuffer buffer = new StringBuffer(512);
+        TO_STRING_STYLE.appendStart(buffer, a);
         for (Method m : a.annotationType().getDeclaredMethods()) {
             if (m.getParameterTypes().length > 0) {
                 continue; //wtf?
             }
             try {
-                builder.append(m.getName(), m.invoke(a));
+                TO_STRING_STYLE.append(buffer, m.getName(), m.invoke(a), null);
             } catch (RuntimeException ex) {
                 throw ex;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
-        return builder.build();
+        TO_STRING_STYLE.appendEnd(buffer, a);
+        return buffer.toString();
     }
 
     /**

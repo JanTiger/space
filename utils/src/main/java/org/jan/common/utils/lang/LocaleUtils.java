@@ -17,8 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  * An exception will not be thrown for a {@code null} input.
  * Each method documents its behaviour in more detail.</p>
  *
- * @since 2.2
- * @version $Id: LocaleUtils.java 1090563 2011-04-09 11:00:10Z sebb $
+ * @since 1.0
  */
 public class LocaleUtils {
 
