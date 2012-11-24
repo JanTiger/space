@@ -20,7 +20,7 @@
     <developer>
 		<id>jan</id>
 		<name>Jan Wong</name>
-		<email>janiswj@gmail.com</email>
+		<email>janindataage@163.com</email>
 		<organization>Tiger</organization>
 	</developer>
   </developers>
@@ -32,8 +32,8 @@
   <repositories>
     <repository>
 		<id>maven</id>
-		  <url>${maven-repository-url}/content/groups/public/</url>
-		</repository>
+		<url>${maven-repository-url}/content/groups/public/</url>
+	</repository>
   </repositories>
   
   <distributionManagement>
