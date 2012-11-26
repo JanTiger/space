@@ -5297,6 +5297,28 @@ public class ArrayUtils {
         return (String[]) list.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 
+    public static String bytes2Hex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        if(null != bytes){
+            for (byte b : bytes) {
+                String s = Integer.toHexString(b & 0xFF);
+                if (s.length() == 1)
+                    sb.append("0");
+                sb.append(s.toUpperCase());
+            }
+        }
+        return sb.toString();
+    }
+
+    public static byte[] hex2Bytes(String hex) {
+        int byteArrayLength = hex.length()/2;
+        byte[] bytes = new byte[byteArrayLength];
+        for (int i = 0; i < byteArrayLength; i++) {
+            bytes[i] = Integer.valueOf(hex.substring(i*2, i*2+2), 16).byteValue();
+        }
+        return bytes;
+    }
+
 }
 abstract class ToStringStyle implements Serializable {
     private static final long serialVersionUID = -1078081122889188948L;
