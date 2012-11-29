@@ -28,6 +28,16 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.11</version>
 		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+  			<artifactId>bcpg-jdk16</artifactId>
+			<version>1.46</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+  			<artifactId>bcprov-ext-jdk16</artifactId>
+			<version>1.46</version>
+		</dependency>
     </dependencies>
 
     <build>
