@@ -40,7 +40,6 @@ import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jan.common.utils.lang.ArrayUtils;
 
@@ -52,50 +51,65 @@ import sun.security.ec.ECPublicKeyImpl;
 import static org.jan.common.utils.security.Algorithm.KeyPairs;
 
 /**
+ * Some of the most common encryption algorithm.
+ *
  * @author Jan.Wang
  *
  */
 @SuppressWarnings("restriction")
 public final class Algorithm {
 
-    private Algorithm(){}
+    private Algorithm() {
+    }
 
+    /**
+     * Class for Key-Value.
+     *
+     * @author jan.wang
+     *
+     * @param <A>
+     * @param <B>
+     */
     static class KeyPairs<A, B> {
         private A a;
+
         private B b;
-        public KeyPairs(A a, B b){
+
+        public KeyPairs(A a, B b) {
             this.a = a;
             this.b = b;
         }
-        public A getFirst(){
+
+        public A getFirst() {
             return a;
         }
-        public B getSecond(){
+
+        public B getSecond() {
             return b;
         }
     }
 
     /**
-     *  OK
-     *  Base64 coder
-     *
+     * Base64 coder
      */
     enum Coder {
         BASE64;
 
         /**
+         * encode the specified text.
          *
          * @param plaintext
-         * @return
+         * @return ciphertext
          */
         public String encode(String plaintext) {
             return EncryptUtils.encodeBASE64(plaintext);
         }
 
         /**
+         * decoder the specified text.
          *
          * @param ciphertext
-         * @return
+         * @return plaintext
          */
         public String decoder(String ciphertext) {
             return EncryptUtils.decoderBASE64(ciphertext);
@@ -104,8 +118,7 @@ public final class Algorithm {
     }
 
     /**
-     * OK
-     *
+     * Several one-way encryption algorithm.
      */
     enum Oneway {
         MD2, MD5, SHA, MD4(true);
@@ -115,28 +128,55 @@ public final class Algorithm {
         private Oneway() {
         }
 
+        /*
+         * external provider
+         */
         private Oneway(boolean needBouncyCastleProvider) {
             this.needBouncyCastleProvider = needBouncyCastleProvider;
         }
 
+        /**
+         * encrypt the specified text
+         *
+         * @param plaintext
+         * @return ciphertext
+         */
         public String encrypt(String plaintext) {
-            return EncryptUtils.encrypt(plaintext, name(), needBouncyCastleProvider);
+            return EncryptUtils.encryptOneway(plaintext, name(), needBouncyCastleProvider);
         }
     };
 
+    /**
+     * Several one-way with HMAC encryption algorithm.
+     */
     enum Oneway_hmac {
         HMACMD5, HMACSHA1, HMACSHA256, HMACSHA384, HMACSHA512;
 
-        public byte[] generateKey() {
+        /**
+         * create key.
+         *
+         * @return key
+         */
+        public String generateKey() {
             return EncryptUtils.generateKey(name(), false);
         }
 
-        public String encrypt(String plaintext, byte[] key) {
+        /**
+         * encrypt the specified text
+         *
+         * @param plaintext
+         * @param key
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String key) {
             return EncryptUtils.encryptOnewayHMAC(plaintext, key, name());
         }
 
     }
 
+    /**
+     * Several symmetry encryption algorithm.
+     */
     enum Symmetry {
         AES, DES, DESEDE, BLOWFISH, RC2, RC4, IDEA(true), RIJNDAEL(true), SERPENT(true), TWOFISH(true), RC5(true);
 
@@ -145,50 +185,81 @@ public final class Algorithm {
         private Symmetry() {
         }
 
+        /*
+         * external provider
+         */
         private Symmetry(boolean needBouncyCastleProvider) {
             this.needBouncyCastleProvider = needBouncyCastleProvider;
         }
 
-        public byte[] generateKey() {
+        /**
+         * create key.
+         *
+         * @return key
+         */
+        public String generateKey() {
             return EncryptUtils.generateKey(name(), needBouncyCastleProvider);
         }
 
-        public String encrypt(String plaintext, byte[] key) {
+        /**
+         * encrypt the specified text
+         *
+         * @param plaintext
+         * @param key
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String key) {
             return EncryptUtils.encryptSymmetry(plaintext, key, name());
         }
 
-        public String decrypt(String ciphertext, byte[] key) {
+        /**
+         * decrypt the specified text
+         *
+         * @param ciphertext
+         * @param key
+         * @return plaintext
+         */
+        public String decrypt(String ciphertext, String key) {
             return EncryptUtils.decryptSymmetry(ciphertext, key, name());
         }
     }
 
+    /**
+     * PBE encryption algorithm.
+     */
     enum Symmetry_pbe {
         PBEWITHMD5ANDDES;
 
-        private byte[] initSalt() {
-            byte[] salt = new byte[8];
-            Random random = new Random();
-            random.nextBytes(salt);
-            return salt;
+        /**
+         * encrypt the specified text.
+         *
+         * @param plaintext
+         * @param password
+         * @return {@link KeyPairs} - KeyPairs&lt;salt, ciphertext&gt;[key-value: the key is salt, and the value is
+         *         ciphertext].
+         */
+        public KeyPairs<String, String> encrypt(String plaintext, String password) {
+            String salt = EncryptUtils.initSalt();
+            String ciphertext = EncryptUtils.encryptPBE(plaintext, Coder.BASE64.encode(password), salt, name());
+            return new KeyPairs<String, String>(salt, ciphertext);
         }
 
         /**
+         * decrypt the specified text
          *
-         * @param src
+         * @param ciphertext
          * @param password
-         * @return
+         * @param salt
+         * @return plaintext
          */
-        public KeyPairs<byte[], String> encrypt(String plaintext, String password) {
-            final byte[] salt = initSalt();
-            final String ciphertext = EncryptUtils.encrypt(plaintext, Coder.BASE64.encode(password), salt, name());
-            return new KeyPairs<byte[], String>(salt, ciphertext);
-        }
-
-        public String decrypt(String ciphertext, String password, byte[] salt) {
-            return EncryptUtils.decrypt(ciphertext, Coder.BASE64.encode(password), salt, name());
+        public String decrypt(String ciphertext, String password, String salt) {
+            return EncryptUtils.decryptPBE(ciphertext, Coder.BASE64.encode(password), salt, name());
         }
     }
 
+    /**
+     * Several asymmetry encryption algorithm.
+     */
     enum Asymmetry {
         RSA("MD5withRSA"), DSA(true);
 
@@ -203,10 +274,13 @@ public final class Algorithm {
             this.defaultSignAlgorithm = signAlgorithm;
         }
 
-        private Asymmetry(boolean onlySign){
+        private Asymmetry(boolean onlySign) {
             this.onlySign = onlySign;
         }
 
+        /*
+         * Gets default sign algorithm.
+         */
         private String getDefaultSignAlgorithm() {
             if (null == defaultSignAlgorithm)
                 defaultSignAlgorithm = name();
@@ -216,41 +290,90 @@ public final class Algorithm {
         /**
          * Generates a key pair.
          *
-         * @return Entry &lt; PublicKey, PrivateKey &gt;
+         * @return {@link KeyPairs} &lt; PublicKey, PrivateKey &gt;
          */
-        public KeyPairs<byte[], byte[]> generateKeyPair() {
+        public KeyPairs<String, String> generateKeyPair() {
             return EncryptUtils.generateKeyPair(name(), null);
         }
 
-        public String encrypt(String plaintext, byte[] publicKey) {
-            if(onlySign)
+        /**
+         * encrypt the specified text with public key.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String publicKey) {
+            if (onlySign)
                 EncryptUtils.throwUnsupportedOperationException(name());
             return EncryptUtils.encryptAsymmetry(plaintext, publicKey, name());
         }
 
-        public String decrypt(String ciphertext, byte[] privateKey) {
-            if(onlySign)
+        /**
+         * decrypt the specified text with private key.
+         *
+         * @param ciphertext
+         * @param privateKey
+         * @return plaintext
+         */
+        public String decrypt(String ciphertext, String privateKey) {
+            if (onlySign)
                 EncryptUtils.throwUnsupportedOperationException(name());
             return EncryptUtils.decryptAsymmetry(ciphertext, privateKey, name());
         }
 
-        public String sign(String plaintext, byte[] privateKey) {
+        /**
+         * sign the specified text.
+         *
+         * @param plaintext
+         * @param privateKey
+         * @return sign
+         */
+        public String sign(String plaintext, String privateKey) {
             return sign(plaintext, privateKey, getDefaultSignAlgorithm());
         }
 
-        public boolean verify(String plaintext, byte[] publicKey, String sign) {
+        /**
+         * verify the specified text from the sign.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @param sign
+         * @return true if validate pass, or false.
+         */
+        public boolean verify(String plaintext, String publicKey, String sign) {
             return verify(plaintext, publicKey, sign, getDefaultSignAlgorithm());
         }
 
-        public String sign(String plaintext, byte[] privateKey, String signAlgorithm) {
+        /**
+         * sign the specified text
+         *
+         * @param plaintext
+         * @param privateKey
+         * @param signAlgorithm
+         * @return sign
+         */
+        public String sign(String plaintext, String privateKey, String signAlgorithm) {
             return EncryptUtils.sign(plaintext, privateKey, name(), signAlgorithm);
         }
 
-        public boolean verify(String plaintext, byte[] publicKey, String sign, String signAlgorithm) {
+        /**
+         * verify the specified text from the sign.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @param sign
+         * @param signAlgorithm
+         * @return true if validate pass, or false.
+         */
+        public boolean verify(String plaintext, String publicKey, String sign, String signAlgorithm) {
             return EncryptUtils.verify(plaintext, publicKey, sign, name(), signAlgorithm);
         }
     }
 
+    /**
+     * Diffie-Hellman encryption algorithm.
+     */
     enum Asymmetry_dh {
         DH("DES");
         private String defaultSecretAlgorithm;
@@ -259,218 +382,155 @@ public final class Algorithm {
             this.defaultSecretAlgorithm = secretAlgorithm;
         }
 
-        String getDefaultSecretAlgorithm() {
-            return this.defaultSecretAlgorithm;
+        /**
+         * Creates two pairs public key and private key for party a and part b.
+         *
+         * @return {@link KeyPairs}&lt;PartyA&lt;public, private&gt, PartyB&lt;public, private&gt;&gt;
+         */
+        public KeyPairs<KeyPairs<String, String>, KeyPairs<String, String>> generateKeyPairs() {
+            final KeyPairs<String, String> partyA = EncryptUtils.generateKeyPair(name(), null);
+            final KeyPairs<String, String> partyB = EncryptUtils.generatePartyBKeyPair(partyA.getFirst(), name());
+            return new KeyPairs<KeyPairs<String, String>, KeyPairs<String, String>>(partyA, partyB);
         }
 
-        public KeyPairs<KeyPairs<byte[], byte[]>, KeyPairs<byte[], byte[]>> generateKeyPairs() {
-            final KeyPairs<byte[], byte[]> partyA = EncryptUtils.generateKeyPair(name(), null);
-            final KeyPairs<byte[], byte[]> partyB = EncryptUtils.createPartyBKeyPair(partyA.getFirst(), name());
-            return new KeyPairs<KeyPairs<byte[], byte[]>, KeyPairs<byte[], byte[]>>(partyA, partyB);
-        }
-
-        public String encrypt(String plaintext, byte[] publicKey, byte[] privateKey) {
+        /**
+         * encrypt the specified text with public key and private key.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @param privateKey
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String publicKey, String privateKey) {
             return encrypt(plaintext, publicKey, privateKey, defaultSecretAlgorithm);
         }
 
-        public String decrypt(String ciphertext, byte[] publicKey, byte[] privateKey) {
-            return decrypt(ciphertext, publicKey, privateKey, defaultSecretAlgorithm);
-        }
-
-        public String encrypt(String plaintext, byte[] publicKey, byte[] privateKey, String secretAlgorithm) {
+        /**
+         * encrypt the specified text with public key and private key with secret algorithm.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @param privateKey
+         * @param secretAlgorithm
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String publicKey, String privateKey, String secretAlgorithm) {
             return EncryptUtils.encrypt(plaintext, publicKey, privateKey, name(), secretAlgorithm);
         }
 
-        public String decrypt(String ciphertext, byte[] publicKey, byte[] privateKey, String secretAlgorithm) {
+        /**
+         * decrypt the specified text with public key and private key.
+         *
+         * @param ciphertext
+         * @param publicKey
+         * @param privateKey
+         * @return plaintext
+         */
+        public String decrypt(String ciphertext, String publicKey, String privateKey) {
+            return decrypt(ciphertext, publicKey, privateKey, defaultSecretAlgorithm);
+        }
+
+        /**
+         * decrypt the specified text with public key and private key with secret algorithm.
+         *
+         * @param ciphertext
+         * @param publicKey
+         * @param privateKey
+         * @param secretAlgorithm
+         * @return plaintext
+         */
+        public String decrypt(String ciphertext, String publicKey, String privateKey, String secretAlgorithm) {
             return EncryptUtils.decrypt(ciphertext, publicKey, privateKey, name(), secretAlgorithm);
         }
     }
 
+    /**
+     * Elliptic Curves Cryptography encryption algorithm.
+     */
     enum Asymmetry_ecc {
         EC;
 
         /**
          * Generates a key pair.
          *
-         * @return Entry &lt; PublicKey, PrivateKey &gt;
+         * @return {@link KeyPairs} &lt; PublicKey, PrivateKey &gt;
          */
-        public KeyPairs<byte[], byte[]> generateKeyPair() {
+        public KeyPairs<String, String> generateKeyPair() {
             return EncryptUtils.generateECCKeyPair();
         }
 
-        public String encrypt(String plaintext, byte[] publicKey) {
+        /**
+         * encrypt the specified text with public key.
+         *
+         * @param plaintext
+         * @param publicKey
+         * @return ciphertext
+         */
+        public String encrypt(String plaintext, String publicKey) {
             return EncryptUtils.encryptECC(plaintext, publicKey);
         }
 
-        public String decrypt(String ciphertext, byte[] privateKey) {
+        /**
+         * decrypt the specified text with private key.
+         *
+         * @param ciphertext
+         * @param privateKey
+         * @return plaintext
+         */
+        public String decrypt(String ciphertext, String privateKey) {
             return EncryptUtils.decryptECC(ciphertext, privateKey);
         }
     }
 
 }
 
+/**
+ * Utilities for encryption.
+ */
 class EncryptUtils {
-
-    static KeyPairs<byte[], byte[]> generateECCKeyPair() {
-        ECPoint ecPoint = new ECPoint(new BigInteger("2fe13c0537bbc11acaa07d793de4e6d5e5c94eee8", 16), new BigInteger("289070fb05d38ff58321f2e800536d538ccdaa3d9", 16));
-        EllipticCurve ellipticCurve = new EllipticCurve(new ECFieldF2m(163, new int[]{ 7, 6, 3 }), new BigInteger("1", 2), new BigInteger("1", 2));
-        ECParameterSpec ecParameterSpec = new ECParameterSpec(ellipticCurve, ecPoint, new BigInteger("5846006549323611672814741753598448348329118574063", 10), 2);
-        try {
-            final ECPublicKey publicKey = new ECPublicKeyImpl(ecPoint, ecParameterSpec);
-            final ECPrivateKey privateKey = new ECPrivateKeyImpl(new BigInteger("1234006549323611672814741753598448348329118574063", 10), ecParameterSpec);
-            return new KeyPairs<byte[], byte[]>(publicKey.getEncoded(), privateKey.getEncoded());
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static String decryptECC(String dest, byte[] privateKey) {
-        try {
-            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(privateKey);
-            KeyFactory keyFactory = ECKeyFactory.INSTANCE;
-            ECPrivateKey priKey = (ECPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
-            ECPrivateKeySpec ecPrivateKeySpec = new ECPrivateKeySpec(priKey.getS(), priKey.getParams());
-            Cipher cipher = new NullCipher();
-            cipher.init(Cipher.DECRYPT_MODE, priKey, ecPrivateKeySpec.getParams());
-            return new String(cipher.doFinal(ArrayUtils.hex2Bytes(dest)), UTF_8);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static String encryptECC(String src, byte[] publicKey) {
-        try {
-            ECPublicKey pubKey = (ECPublicKey) ECKeyFactory.INSTANCE.generatePublic(new X509EncodedKeySpec(publicKey));
-            ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(pubKey.getW(), pubKey.getParams());
-            Cipher cipher = new NullCipher();
-            cipher.init(Cipher.ENCRYPT_MODE, pubKey, ecPublicKeySpec.getParams());
-            return ArrayUtils.bytes2Hex(cipher.doFinal(src.getBytes(UTF_8)));
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private static final String UTF_8 = "UTF-8";
 
-    static String encrypt(String src, String password, byte[] salt, String algorithm) {
-        try {
-            byte[] bytes = encrypt(src.getBytes(UTF_8), password, salt, algorithm, Cipher.ENCRYPT_MODE);
-            return ArrayUtils.bytes2Hex(bytes);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+    /**
+     * init salt
+     *
+     * @return salt.
+     */
+    static String initSalt() {
+        byte[] salt = new byte[8];
+        Random random = new Random();
+        random.nextBytes(salt);
+        return encodeBASE64(salt);
     }
 
-    static String encrypt(String src, byte[] publicKeyBytes, byte[] privateKeyBytes, String algorithm, String secretAlgorithm) {
-        SecretKey secretKey = createLocalSecretKey(publicKeyBytes, privateKeyBytes, algorithm, secretAlgorithm);
-        try {
-            byte[] bytes = encrypt(src.getBytes(UTF_8), secretKey, Cipher.ENCRYPT_MODE);
-            return ArrayUtils.bytes2Hex(bytes);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return src;
-    }
-
-    static String decrypt(String dest, byte[] publicKeyBytes, byte[] privateKeyBytes, String algorithm, String secretAlgorithm) {
-        SecretKey secretKey = createLocalSecretKey(publicKeyBytes, privateKeyBytes, algorithm, secretAlgorithm);
-        try {
-            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(dest), secretKey, Cipher.DECRYPT_MODE);
-            return new String(bytes, UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static SecretKey createLocalSecretKey(byte[] publicKeyBytes, byte[] privateKeyBytes, String algorithm,
-            String secretAlgorithm) {
-        try {
-            PublicKey publicKey = initPublicKey(publicKeyBytes, algorithm);
-            PrivateKey privateKey = initPrivateKey(privateKeyBytes, algorithm);
-            KeyAgreement keyAgree = KeyAgreement.getInstance(algorithm);
-            keyAgree.init(privateKey);
-            keyAgree.doPhase(publicKey, true);
-            return keyAgree.generateSecret(secretAlgorithm);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static String decrypt(String dest, String password, byte[] salt, String algorithm) {
-        try {
-            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(dest), password, salt, algorithm, Cipher.DECRYPT_MODE);
-            return new String(bytes, UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static byte[] encrypt(byte[] bytes, String password, byte[] salt, String algorithm, int mode) {
-        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
-        try {
-            SecretKey secretKey = SecretKeyFactory.getInstance(algorithm).generateSecret(keySpec);
-            PBEParameterSpec paramSpec = new PBEParameterSpec(salt, 100);
-            Cipher cipher = Cipher.getInstance(algorithm);
-            cipher.init(mode, secretKey, paramSpec);
-            bytes = cipher.doFinal(bytes);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-        return bytes;
-    }
-
-    //HMAC,Symmetry
-    static byte[] generateKey(String algorithm, boolean needBouncyCastleProvider) {
+    /**
+     * create key for HMAC and Symmetry.
+     *
+     * @param algorithm
+     * @param needBouncyCastleProvider
+     * @return key
+     */
+    static String generateKey(String algorithm, boolean needBouncyCastleProvider) {
         try {
             if (needBouncyCastleProvider)
                 Security.addProvider(new BouncyCastleProvider());
             KeyGenerator generator = KeyGenerator.getInstance(algorithm);
             if (needBouncyCastleProvider)
                 generator.init(128);
-            return generator.generateKey().getEncoded();
+            return encodeBASE64(generator.generateKey().getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new UnsupportedOperationException(e);
         }
     }
 
-    static PublicKey initPublicKey(byte[] publicKeyBytes, String algorithm) {
-        try {
-            return KeyFactory.getInstance(algorithm).generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static PrivateKey initPrivateKey(byte[] privateKeyBytes, String algorithm) {
-        try {
-            return KeyFactory.getInstance(algorithm).generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    static KeyPairs<byte[], byte[]> createPartyBKeyPair(byte[] partyAPublicKeyBytes, String algorithm) {
-        PublicKey pubKey = initPublicKey(partyAPublicKeyBytes, algorithm);
-        DHParameterSpec dhParamSpec = ((DHPublicKey) pubKey).getParams();
-        return generateKeyPair(algorithm, dhParamSpec);
-    }
-
-    static KeyPairs<byte[], byte[]> generateKeyPair(String algorithm, AlgorithmParameterSpec algorithmParameterSpecs) {
+    /**
+     * Generates a key pair.
+     *
+     * @param algorithm
+     * @param algorithmParameterSpecs
+     * @return {@link KeyPairs} &lt; PublicKey, PrivateKey &gt;
+     */
+    static KeyPairs<String, String> generateKeyPair(String algorithm, AlgorithmParameterSpec algorithmParameterSpecs) {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(algorithm);
             if (null != algorithmParameterSpecs)
@@ -480,168 +540,436 @@ class EncryptUtils {
             KeyPair keyPair = keyPairGen.generateKeyPair();
             final PublicKey publicKey = keyPair.getPublic();
             final PrivateKey privateKey = keyPair.getPrivate();
-            return new KeyPairs<byte[], byte[]>(publicKey.getEncoded(), privateKey.getEncoded());
+            return new KeyPairs<String, String>(encodeBASE64(publicKey.getEncoded()), encodeBASE64(privateKey
+                    .getEncoded()));
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
-    //MD2, MD5, SHA, MD4
-    static String encrypt(String plaintext, String algorithm, boolean needBouncyCastleProvider) {
-        if(needBouncyCastleProvider)
+    /**
+     * Creates public key and private key for part b according to public key of party a.
+     *
+     * @param partyAPublicKey
+     * @param algorithm
+     * @return {@link KeyPairs}&lt;{@link String}, {@link String}&gt;
+     */
+    static KeyPairs<String, String> generatePartyBKeyPair(String partyAPublicKey, String algorithm) {
+        PublicKey pubKey = initPublicKey(partyAPublicKey, algorithm);
+        DHParameterSpec dhParamSpec = ((DHPublicKey) pubKey).getParams();
+        return generateKeyPair(algorithm, dhParamSpec);
+    }
+
+    /**
+     * Generates a key pair.
+     *
+     * @return {@link KeyPairs}&lt;{@link String}, {@link String}&gt;
+     */
+    static KeyPairs<String, String> generateECCKeyPair() {
+        ECPoint ecPoint = new ECPoint(new BigInteger("2fe13c0537bbc11acaa07d793de4e6d5e5c94eee8", 16), new BigInteger(
+                "289070fb05d38ff58321f2e800536d538ccdaa3d9", 16));
+        EllipticCurve ellipticCurve = new EllipticCurve(new ECFieldF2m(163, new int[] { 7, 6, 3 }), new BigInteger("1",
+                2), new BigInteger("1", 2));
+        ECParameterSpec ecParameterSpec = new ECParameterSpec(ellipticCurve, ecPoint, new BigInteger(
+                "5846006549323611672814741753598448348329118574063", 10), 2);
+        try {
+            final ECPublicKey publicKey = new ECPublicKeyImpl(ecPoint, ecParameterSpec);
+            final ECPrivateKey privateKey = new ECPrivateKeyImpl(new BigInteger(
+                    "1234006549323611672814741753598448348329118574063", 10), ecParameterSpec);
+            return new KeyPairs<String, String>(encodeBASE64(publicKey.getEncoded()), encodeBASE64(privateKey
+                    .getEncoded()));
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*
+     * create local secret key
+     */
+    private static SecretKey createLocalSecretKey(String publicKey, String privateKey, String algorithm,
+            String secretAlgorithm) {
+        try {
+            PublicKey publickey = initPublicKey(publicKey, algorithm);
+            PrivateKey privatekey = initPrivateKey(privateKey, algorithm);
+            KeyAgreement keyAgree = KeyAgreement.getInstance(algorithm);
+            keyAgree.init(privatekey);
+            keyAgree.doPhase(publickey, true);
+            return keyAgree.generateSecret(secretAlgorithm);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text with public key.
+     *
+     * @param plaintext
+     * @param publicKey
+     * @return ciphertext
+     */
+    static String encryptECC(String plaintext, String publicKey) {
+        try {
+            ECPublicKey pubKey = (ECPublicKey) ECKeyFactory.INSTANCE.generatePublic(new X509EncodedKeySpec(
+                    decoderBASE64ToByteArray(publicKey)));
+            ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(pubKey.getW(), pubKey.getParams());
+            Cipher cipher = new NullCipher();
+            cipher.init(Cipher.ENCRYPT_MODE, pubKey, ecPublicKeySpec.getParams());
+            return ArrayUtils.bytes2Hex(cipher.doFinal(plaintext.getBytes(UTF_8)));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * decrypt the specified text with private key.
+     *
+     * @param ciphertext
+     * @param privateKey
+     * @return plaintext
+     */
+    static String decryptECC(String ciphertext, String privateKey) {
+        try {
+            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(decoderBASE64ToByteArray(privateKey));
+            KeyFactory keyFactory = ECKeyFactory.INSTANCE;
+            ECPrivateKey priKey = (ECPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
+            ECPrivateKeySpec ecPrivateKeySpec = new ECPrivateKeySpec(priKey.getS(), priKey.getParams());
+            Cipher cipher = new NullCipher();
+            cipher.init(Cipher.DECRYPT_MODE, priKey, ecPrivateKeySpec.getParams());
+            return new String(cipher.doFinal(ArrayUtils.hex2Bytes(ciphertext)), UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text
+     *
+     * @param plaintext
+     * @param password
+     * @param salt
+     * @param algorithm
+     * @return ciphertext
+     */
+    static String encryptPBE(String plaintext, String password, String salt, String algorithm) {
+        try {
+            byte[] bytes = encrypt(plaintext.getBytes(UTF_8), password, salt, algorithm, Cipher.ENCRYPT_MODE);
+            return ArrayUtils.bytes2Hex(bytes);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * decrypt the specified text
+     *
+     * @param ciphertext
+     * @param password
+     * @param salt
+     * @param algorithm
+     * @return plaintext
+     */
+    static String decryptPBE(String ciphertext, String password, String salt, String algorithm) {
+        try {
+            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(ciphertext), password, salt, algorithm, Cipher.DECRYPT_MODE);
+            return new String(bytes, UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text with public key and private key with secret algorithm.
+     *
+     * @param plaintext
+     * @param publicKey
+     * @param privateKey
+     * @param algorithm
+     * @param secretAlgorithm
+     * @return ciphertext
+     */
+    static String encrypt(String plaintext, String publicKey, String privateKey, String algorithm,
+            String secretAlgorithm) {
+        return encrypt(plaintext, createLocalSecretKey(publicKey, privateKey, algorithm, secretAlgorithm));
+    }
+
+    /**
+     * decrypt the specified text with public key and private key with secret algorithm.
+     *
+     * @param ciphertext
+     * @param publicKey
+     * @param privateKey
+     * @param algorithm
+     * @param secretAlgorithm
+     * @return plaintext
+     */
+    static String decrypt(String ciphertext, String publicKey, String privateKey, String algorithm,
+            String secretAlgorithm) {
+        return decrypt(ciphertext, createLocalSecretKey(publicKey, privateKey, algorithm, secretAlgorithm));
+    }
+
+    /*
+     * encrypt the specified byte array with password and salt.
+     */
+    private static byte[] encrypt(byte[] bytes, String password, String salt, String algorithm, int mode) {
+        PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray());
+        PBEParameterSpec paramSpec = new PBEParameterSpec(decoderBASE64ToByteArray(salt), 100);
+        try {
+            SecretKey secretKey = SecretKeyFactory.getInstance(algorithm).generateSecret(keySpec);
+            return encrypt(bytes, secretKey, paramSpec, mode);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates the public key.
+     *
+     * @param publicKey
+     * @param algorithm
+     * @return
+     */
+    static PublicKey initPublicKey(String publicKey, String algorithm) {
+        try {
+            return KeyFactory.getInstance(algorithm).generatePublic(
+                    new X509EncodedKeySpec(decoderBASE64ToByteArray(publicKey)));
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates the private key.
+     *
+     * @param privateKey
+     * @param algorithm
+     * @return {@link PrivateKey}
+     */
+    static PrivateKey initPrivateKey(String privateKey, String algorithm) {
+        try {
+            return KeyFactory.getInstance(algorithm).generatePrivate(
+                    new PKCS8EncodedKeySpec(decoderBASE64ToByteArray(privateKey)));
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text, supports only MD2, MD5, SHA and MD4 so far.
+     *
+     * @param plaintext
+     * @param algorithm
+     * @param needBouncyCastleProvider
+     * @return ciphertext
+     */
+    static String encryptOneway(String plaintext, String algorithm, boolean needBouncyCastleProvider) {
+        if (needBouncyCastleProvider)
             Security.addProvider(new BouncyCastleProvider());
-        return encrypt(plaintext, algorithm);
+        try {
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            md.update(plaintext.getBytes(UTF_8));
+            return new BigInteger(1, md.digest()).toString(16);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    /**
+     * throw {@link UnsupportedOperationException}.
+     *
+     * @param message
+     */
     static void throwUnsupportedOperationException(String message) {
         throw new UnsupportedOperationException(message);
     }
 
-    private static String encrypt(String str, String method) {
-        MessageDigest md = null;
-        String dstr = null;
-        try {
-            md = MessageDigest.getInstance(method);
-            md.update(str.getBytes(UTF_8));
-            dstr = new BigInteger(1, md.digest()).toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return dstr;
+    /**
+     * encrypt the specified text for asymmetry algorithm.
+     *
+     * @param plaintext
+     * @param key
+     * @param algorithm
+     * @return ciphertext
+     */
+    public static String encryptAsymmetry(String plaintext, String key, String algorithm) {
+        return encrypt(plaintext, initPublicKey(key, algorithm));
     }
 
-    public static String encryptAsymmetry(String src, byte[] key, String algorithm) {
+    /**
+     * decrypt the specified text for asymmetry algorithm.
+     *
+     * @param ciphertext
+     * @param key
+     * @param algorithm
+     * @return plaintext
+     */
+    public static String decryptAsymmetry(String ciphertext, String key, String algorithm) {
+        return decrypt(ciphertext, initPrivateKey(key, algorithm));
+    }
+
+    /*
+     * encrypt the specified byte text.
+     */
+    private static String encrypt(String plaintext, Key key) {
         try {
-            byte[] bytes = encrypt(src.getBytes(UTF_8), initPublicKey(key, algorithm), Cipher.ENCRYPT_MODE);
+            byte[] bytes = encrypt(plaintext.getBytes(UTF_8), key, null, Cipher.ENCRYPT_MODE);
             return ArrayUtils.bytes2Hex(bytes);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return src;
     }
 
-    public static String decryptAsymmetry(String dest, byte[] key, String algorithm) {
-        try {
-            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(dest), initPrivateKey(key, algorithm), Cipher.DECRYPT_MODE);
-            return new String(bytes, UTF_8);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return dest;
-    }
-
-    private static byte[] encrypt(byte[] bytes, byte[] key, String algorithm) {
-        SecretKey secretKey = new SecretKeySpec(key, algorithm);
-        try {
-            Mac mac = Mac.getInstance(algorithm);
-            mac.init(secretKey);
-            return mac.doFinal(bytes);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-        return bytes;
-    }
-
-    private static byte[] encrypt(byte[] bytes, Key key, int mode) {
+    /*
+     * encrypt the specified byte array.
+     */
+    private static byte[] encrypt(byte[] bytes, Key key, AlgorithmParameterSpec param, int mode) {
         try {
             Cipher cipher = Cipher.getInstance(key.getAlgorithm());
-            cipher.init(mode, key);
+            if (null == param)
+                cipher.init(mode, key);
+            else
+                cipher.init(mode, key, param);
             return cipher.doFinal(bytes);
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return bytes;
     }
 
-    /**
-     * BASE64
-     *
-     * @param src
-     * @return
-     * @throws Exception
+    /*
+     * decrypt the specified byte array.
      */
-    public static String encodeBASE64(String src) {
+    private static String decrypt(String ciphertext, Key key) {
         try {
-            return new BASE64Encoder().encode(src.getBytes(UTF_8));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return src;
-    }
-
-    /**
-     * BASE64
-     *
-     * @param dest
-     * @return
-     * @throws Exception
-     */
-    public static String decoderBASE64(String dest) {
-        try {
-            return new String(new BASE64Decoder().decodeBuffer(dest), UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return dest;
-    }
-
-    //hmac
-    public static String encryptOnewayHMAC(String src, byte[] key, String algorithm) {
-        try {
-            byte[] bytes = encrypt(src.getBytes(UTF_8), key, algorithm);
-            return ArrayUtils.bytes2Hex(bytes);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return src;
-    }
-
-    //Symmetry
-    public static String encryptSymmetry(String src, byte[] key, String algorithm) {
-        try {
-            byte[] bytes = encrypt(src.getBytes(UTF_8), new SecretKeySpec(key, algorithm), Cipher.ENCRYPT_MODE);
-            return ArrayUtils.bytes2Hex(bytes);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return src;
-    }
-
-    //Symmetry
-    public static String decryptSymmetry(String dest, byte[] key, String algorithm) {
-        try {
-            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(dest), new SecretKeySpec(key, algorithm), Cipher.DECRYPT_MODE);
+            byte[] bytes = encrypt(ArrayUtils.hex2Bytes(ciphertext), key, null, Cipher.DECRYPT_MODE);
             return new String(bytes, UTF_8);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return dest;
     }
 
-    //ASymmetry
-    public static String sign(String src, byte[] privateKey, String algorithm, String signAlgorithm) {
+    /**
+     * encode the specified text.
+     *
+     * @param plaintext
+     * @return ciphertext - if {@link UnsupportedEncodingException} occur it will throws runtime exception.
+     */
+    public static String encodeBASE64(String plaintext) {
+        try {
+            return encodeBASE64(plaintext.getBytes(UTF_8));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*
+     * encode the specified byte array.
+     */
+    private static String encodeBASE64(byte[] bytes) {
+        return new BASE64Encoder().encode(bytes);
+    }
+
+    /*
+     * decoder the specified text. if IOException occur it will throws runtime exception.
+     */
+    private static byte[] decoderBASE64ToByteArray(String ciphertext) {
+        try {
+            return new BASE64Decoder().decodeBuffer(ciphertext);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * decoder the specified text.
+     *
+     * @param ciphertext
+     * @return plaintext - if {@link IOException} or occur it will throws runtime exception.
+     */
+    public static String decoderBASE64(String ciphertext) {
+        try {
+            return new String(decoderBASE64ToByteArray(ciphertext), UTF_8);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text.
+     *
+     * @param plaintext
+     * @param key
+     * @param algorithm
+     * @return
+     */
+    public static String encryptOnewayHMAC(String plaintext, String key, String algorithm) {
+        try {
+            SecretKey secretKey = new SecretKeySpec(decoderBASE64ToByteArray(key), algorithm);
+            Mac mac = Mac.getInstance(algorithm);
+            mac.init(secretKey);
+            return ArrayUtils.bytes2Hex(mac.doFinal(plaintext.getBytes(UTF_8)));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * encrypt the specified text
+     *
+     * @param plaintext
+     * @param key
+     * @param algorithm
+     * @return ciphertext
+     */
+    public static String encryptSymmetry(String plaintext, String key, String algorithm) {
+        return encrypt(plaintext, new SecretKeySpec(decoderBASE64ToByteArray(key), algorithm));
+    }
+
+    /**
+     * decrypt the specified text
+     *
+     * @param ciphertext
+     * @param key
+     * @param algorithm
+     * @return plaintext
+     */
+    public static String decryptSymmetry(String ciphertext, String key, String algorithm) {
+        return decrypt(ciphertext, new SecretKeySpec(decoderBASE64ToByteArray(key), algorithm));
+    }
+
+    /**
+     * sign the specified text
+     *
+     * @param plaintext
+     * @param privateKey
+     * @param algorithm
+     * @param signAlgorithm
+     * @return sign
+     */
+    public static String sign(String plaintext, String privateKey, String algorithm, String signAlgorithm) {
         try {
             Signature signature = Signature.getInstance(signAlgorithm);
             signature.initSign(initPrivateKey(privateKey, algorithm));
-            signature.update(src.getBytes(UTF_8));
+            signature.update(plaintext.getBytes(UTF_8));
             return ArrayUtils.bytes2Hex(signature.sign());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return src;
     }
 
-    //ASymmetry
-    public static boolean verify(String src, byte[] publicKey, String sign, String algorithm, String signAlgorithm) {
+    /**
+     * verify the specified text from the sign.
+     *
+     * @param plaintext
+     * @param publicKey
+     * @param sign
+     * @param algorithm
+     * @param signAlgorithm
+     * @return true if validate pass, or false.
+     */
+    public static boolean verify(String plaintext, String publicKey, String sign, String algorithm, String signAlgorithm) {
         try {
             Signature signature = Signature.getInstance(signAlgorithm);
             signature.initVerify(initPublicKey(publicKey, algorithm));
-            signature.update(src.getBytes(UTF_8));
+            signature.update(plaintext.getBytes(UTF_8));
             return signature.verify(ArrayUtils.hex2Bytes(sign));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
