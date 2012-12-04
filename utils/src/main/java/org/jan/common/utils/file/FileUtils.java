@@ -6,6 +6,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -2629,6 +2630,69 @@ public class FileUtils {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Returns an array of those files that they're contained in the directory.<br>
+     * some file will filtered if their suffix is not same as the parameter when suffix is not null.
+     *
+     * @param path directory path
+     * @param suffix file's suffix
+     * @return a array will be empty if the directory is not exist or not a file.
+     */
+    public static File[] listFiles(String path, final String suffix){
+        File file = new File(path);
+        File[] files = new File[0];
+        if(file.exists() && file.isDirectory()){
+            if(null == suffix){
+                files = file.listFiles();
+            }else{
+                files = file.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.endsWith(suffix);
+                    }
+                });
+            }
+        }
+        return files;
+    }
+
+    /**
+     * Gets file from the specified path.
+     *
+     * @param path
+     * @param isCreate whether instance
+     * @return a new file will be created if file is not exist and isCreate is true or not.
+     */
+    public static File instanceFile(String path, boolean isCreate){
+        File file = new File(path);
+        try {
+            if(isCreate && !file.exists()){
+                File folder = file.getParentFile();
+                if(!folder.exists())
+                    folder.mkdir();
+                if(!file.createNewFile())
+                    throw new IOException("create failed!");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("create file failed : %s . Cause by: %s", path, e.getMessage()));
+        }
+        return file;
+    }
+
+    /**
+     * Creates directory.
+     *
+     * @param path the specified path
+     * @return a new folder if it is not exist.
+     */
+    public static File createDirectory (String path){
+        File folder = new File(path);
+        if(!folder.exists()) {
+            folder.mkdir();
+        }
+        return folder;
     }
 
 }

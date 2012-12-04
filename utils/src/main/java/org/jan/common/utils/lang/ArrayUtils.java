@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.jan.common.utils.reflect.ClassUtils;
 
@@ -5295,6 +5298,31 @@ public class ArrayUtils {
             }
         }
         return (String[]) list.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+    }
+
+    public static String bytes2Hex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        if(null != bytes){
+            for (byte b : bytes) {
+                String s = Integer.toHexString(b & 0xFF);
+                if (s.length() == 1)
+                    sb.append("0");
+                sb.append(s.toUpperCase());
+            }
+        }
+        return sb.toString();
+        //return new BigInteger(1, bytes).toString(16);
+        //return DatatypeConverter.printHexBinary(bytes);
+    }
+
+    public static byte[] hex2Bytes(String hex) {
+        int byteArrayLength = hex.length()/2;
+        byte[] bytes = new byte[byteArrayLength];
+        for (int i = 0; i < byteArrayLength; i++) {
+            bytes[i] = Integer.valueOf(hex.substring(i*2, i*2+2), 16).byteValue();
+        }
+        return bytes;
+        //return DatatypeConverter.parseHexBinary(s);
     }
 
 }
