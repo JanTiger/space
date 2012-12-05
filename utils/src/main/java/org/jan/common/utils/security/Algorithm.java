@@ -70,7 +70,7 @@ public final class Algorithm {
      * @param <A>
      * @param <B>
      */
-    static class KeyPairs<A, B> {
+    public static class KeyPairs<A, B> {
         private A a;
 
         private B b;
@@ -92,7 +92,7 @@ public final class Algorithm {
     /**
      * Base64 coder
      */
-    enum Coder {
+    public enum Coder {
         BASE64;
 
         /**
@@ -120,7 +120,7 @@ public final class Algorithm {
     /**
      * Several one-way encryption algorithm.
      */
-    enum Oneway {
+    public enum Oneway {
         MD2, MD5, SHA, MD4(true);
 
         private boolean needBouncyCastleProvider;
@@ -149,7 +149,7 @@ public final class Algorithm {
     /**
      * Several one-way with HMAC encryption algorithm.
      */
-    enum Oneway_hmac {
+    public enum Oneway_hmac {
         HMACMD5, HMACSHA1, HMACSHA256, HMACSHA384, HMACSHA512;
 
         /**
@@ -177,7 +177,7 @@ public final class Algorithm {
     /**
      * Several symmetry encryption algorithm.
      */
-    enum Symmetry {
+    public enum Symmetry {
         AES, DES, DESEDE, BLOWFISH, RC2, RC4, IDEA(true), RIJNDAEL(true), SERPENT(true), TWOFISH(true), RC5(true);
 
         private boolean needBouncyCastleProvider;
@@ -227,7 +227,7 @@ public final class Algorithm {
     /**
      * PBE encryption algorithm.
      */
-    enum Symmetry_pbe {
+    public enum Symmetry_pbe {
         PBEWITHMD5ANDDES;
 
         /**
@@ -260,7 +260,7 @@ public final class Algorithm {
     /**
      * Several asymmetry encryption algorithm.
      */
-    enum Asymmetry {
+    public enum Asymmetry {
         RSA("MD5withRSA"), DSA(true);
 
         private String defaultSignAlgorithm;
@@ -374,7 +374,7 @@ public final class Algorithm {
     /**
      * Diffie-Hellman encryption algorithm.
      */
-    enum Asymmetry_dh {
+    public enum Asymmetry_dh {
         DH("DES");
         private String defaultSecretAlgorithm;
 
@@ -447,7 +447,7 @@ public final class Algorithm {
     /**
      * Elliptic Curves Cryptography encryption algorithm.
      */
-    enum Asymmetry_ecc {
+    public enum Asymmetry_ecc {
         EC;
 
         /**
