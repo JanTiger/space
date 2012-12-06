@@ -25,14 +25,14 @@
     </fileSet>
 
     <fileSet filtered="true" packaged="false">
-      <directory>src/main/assembly</directory>
+      <directory>src/main/resources</directory>
       <includes>
-        <include>assemble.xml</include>
+        <include>**</include>
       </includes>
     </fileSet>
-
-    <fileSet filtered="true" packaged="false">
-      <directory>src/main/resources</directory>
+	
+	<fileSet filtered="true" packaged="false">
+      <directory>src/main/webapp</directory>
       <includes>
         <include>**</include>
       </includes>

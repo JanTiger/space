@@ -1,12 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
     <version>${version}</version>
-	<packaging>war</packaging>
     <name>Jan Web Application - ${artifactId}</name>
-	
-    <properties>
+	<packaging>war</packaging>
+
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<dependency.update.interval>30</dependency.update.interval>
         <maven-repository-username>Jan</maven-repository-username>
@@ -14,32 +15,15 @@
 		<maven-repository-url>http://${maven-repository-host}:9001/maven</maven-repository-url>
 		<org.springframework.version>3.1.3.RELEASE</org.springframework.version>
 		<struts2.version>2.3.7</struts2.version>
-    </properties>
-	
+		<hibernate.version>4.1.8.Final</hibernate.version>
+	</properties>
+
 	<dependencies>
-        <!-- jstl -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>0.2.9</version>
-			<scope>compile</scope>
-		</dependency>
-		<!-- aspectjweaver -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		<!-- hibernate4 -->
+		<!-- hibernate -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.1.8.Final</version>
+			<version>${hibernate.version}</version>
 		</dependency>
 		<!-- struts2 -->
 		<dependency>
@@ -63,7 +47,7 @@
 			<artifactId>struts2-convention-plugin</artifactId>
 			<version>${struts2.version}</version>
 		</dependency>
-		<!-- spring3 -->
+		<!-- spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -72,11 +56,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
 		<dependency>
@@ -104,21 +83,41 @@
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.16</version>
-		</dependency>
-    </dependencies>
-
-    <repositories>
-        <repository>
+	</dependencies>
+	<repositories>
+		<!-- For testing against latest Spring snapshots -->
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- For Spring releases -->
+		<repository>
+			<id>org.springframework.maven.release</id>
+			<name>Spring Maven Release Repository</name>
+			<url>http://maven.springframework.org/release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<!-- For developing against latest Spring milestones -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<repositories>
+		<repository>
             <id>jan</id>
             <name>Jan repository</name>
             <url>${maven-repository-url}</url>
@@ -161,9 +160,8 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-    </repositories>
-
-    <pluginRepositories>
+	</repositories>
+	<pluginRepositories>
         <pluginRepository>
             <id>jan</id>
             <url>${maven-repository-url}</url>
@@ -177,53 +175,35 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-			<id>tiger.releases</id>
-			<name>Tiger Release Repository</name>
-			<url>${maven-repository-url}/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-		  <id>tiger.snapshots</id>
-		  <name>Tiger Snapshot Repository</name>
-		  <url>${maven-repository-url}/content/repositories/snapshots/</url>
-		</snapshotRepository>
-    </distributionManagement>
-
-    <build>
-        <outputDirectory>target/root/classes</outputDirectory>
-
-        <resources>
-            <resource>
-                <targetPath>../</targetPath>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-
-            <!-- Tomcat 7 Plugin -->
-			<!-- <plugin> <groupId>com.googlecode.t7mp</groupId> <artifactId>maven-t7-plugin</artifactId> 
-				<version>0.9.8.M2A</version> <configuration> <contextPath>greenhouse</contextPath> 
-				</configuration> </plugin> -->
+	<pluginRepositories>
+        <pluginRepository>
+            <id>jan</id>
+            <url>${maven-repository-url}</url>
+            <snapshots>
+                <updatePolicy>interval:${dependency.update.interval}</updatePolicy>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>interval:${dependency.update.interval}</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>7.6.8.v20121106</version>
+				<version>8.1.8.v20121106</version>
 				<configuration>
-					<webAppConfig>
-						<contextPath>/</contextPath>
-						<webAppSourceDirectory>${basedir}/src/main/webapp</webAppSourceDirectory>
-						<descriptor>${basedir}/src/main/webapp/WEB-INF/web.xml</descriptor>
-					</webAppConfig>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
 							<port>8080</port>
@@ -236,13 +216,11 @@
 					<systemProperties>
 						<systemProperty>
 							<name>org.eclipse.jetty.util.URI.charset</name>
-							<value>UTF-8</value>
+							<value>${project.build.sourceEncoding}</value>
 						</systemProperty>
 					</systemProperties>
 				</configuration>
 			</plugin>
-
-        </plugins>
-    </build>
-
+		</plugins>
+	</build>
 </project>

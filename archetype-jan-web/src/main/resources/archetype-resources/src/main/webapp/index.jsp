@@ -3,7 +3,7 @@
 <!DOCTYPE HTML >
 <html>
 <head>
-<title>Web Application</title>
+<title>SSH Web Application</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
@@ -11,6 +11,6 @@
 <meta http-equiv="description" content="This is my page">
 </head>
 <body>
-	<H1>Welcome to you!!!</H1>
+	<H1>Welcome to SSH!!!</H1>
 </body>
 </html>

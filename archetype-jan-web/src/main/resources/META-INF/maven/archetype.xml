@@ -1,14 +1,13 @@
 <archetype>
   <id>archetype-jan-app</id>
   <sources>
-    <source>src/main/java/HelloWorld.java</source>
+    <source>src/main/java/action/BaseAction.java</source>
+	<source>src/main/java/service/BaseService.java</source>
+	<source>src/main/java/dao/BaseDao.java</source>
   </sources>
   <resources>
     <resource>pom.xml</resource>
     <resource>src/main/resources/default.properties</resource> 
-    <resource>src/main/assembly/assemble.xml</resource>
+    <resource>src/main/resources/*.xml</resource>
   </resources>
-  <testSources>
-    <source>src/test/java/AppTest.java</source>
-  </testSources>
 </archetype>
