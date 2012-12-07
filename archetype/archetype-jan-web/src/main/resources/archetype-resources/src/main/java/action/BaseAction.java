@@ -3,8 +3,10 @@ package ${package}.action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 
-@ParentPackage("basePackage")
+import com.opensymphony.xwork2.ActionSupport;
+
+@ParentPackage("struts-default")
 @Namespace("/")
-public class BaseAction {
+public class BaseAction extends ActionSupport {
 
 }

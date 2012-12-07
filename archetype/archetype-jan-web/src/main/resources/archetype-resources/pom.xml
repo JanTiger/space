@@ -16,6 +16,7 @@
 		<org.springframework.version>3.1.3.RELEASE</org.springframework.version>
 		<struts2.version>2.3.7</struts2.version>
 		<hibernate.version>4.1.8.Final</hibernate.version>
+		<jetty.version>7.6.8.v20121106</jetty.version>
 	</properties>
 
 	<dependencies>
@@ -69,6 +70,12 @@
 			<version>${org.springframework.version}</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- CGLIB, only required and used for @Configuration usage -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 		<!-- servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -84,38 +91,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<!-- For testing against latest Spring snapshots -->
-		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- For Spring releases -->
-		<repository>
-			<id>org.springframework.maven.release</id>
-			<name>Spring Maven Release Repository</name>
-			<url>http://maven.springframework.org/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 	<repositories>
 		<repository>
             <id>jan</id>
@@ -175,20 +150,6 @@
             </releases>
         </pluginRepository>
     </pluginRepositories>
-	<pluginRepositories>
-        <pluginRepository>
-            <id>jan</id>
-            <url>${maven-repository-url}</url>
-            <snapshots>
-                <updatePolicy>interval:${dependency.update.interval}</updatePolicy>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>interval:${dependency.update.interval}</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -202,7 +163,7 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.8.v20121106</version>
+				<version>${jetty.version}</version>
 				<configuration>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">

@@ -28,5 +28,4 @@
 	<!-- For WebLogic, Orion, OC4J this attribute should be set to true -->
 	<constant name="struts.dispatcher.parametersWorkaround" value="false" />
 
-	<package name="basePackage" extends="struts-default" />
 </struts>
