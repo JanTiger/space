@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor name="archetype-jan-app" partial="true">
+
+  <requiredProperties>
+
+    <requiredProperty key="version">
+      <defaultValue>1.0.0-SNAPSHOT</defaultValue>
+    </requiredProperty>
+
+  </requiredProperties>
+
+  <fileSets>
+    <fileSet filtered="true" packaged="true">
+      <directory>src/main/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </fileSet>
+
+    <fileSet filtered="true" packaged="true">
+      <directory>src/test/java</directory>
+      <includes>
+        <include>**/*.java</include>
+      </includes>
+    </fileSet>
+
+    <fileSet filtered="true" packaged="false">
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+    </fileSet>
+	
+	<fileSet filtered="true" packaged="false">
+      <directory>src/main/webapp</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+    </fileSet>
+
+  </fileSets>
+
+</archetype-descriptor>
