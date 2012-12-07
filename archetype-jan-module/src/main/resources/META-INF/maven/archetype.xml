@@ -1,9 +1,0 @@
-<archetype>
-  <id>archetype-jan-module</id>
-  <sources>
-    <source>src/main/java/HelloWorld.java</source>
-  </sources>
-  <testSources>
-    <source>src/test/java/ModuleTest.java</source>
-  </testSources>
-</archetype>
