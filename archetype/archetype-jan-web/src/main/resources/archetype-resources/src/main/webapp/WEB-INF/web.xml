@@ -9,7 +9,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>${package}</param-value>
+		<param-value>${package}.config</param-value>
 	</context-param>
 	<!-- openSessionInView -->
 	<filter>

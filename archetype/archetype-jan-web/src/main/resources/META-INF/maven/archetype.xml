@@ -1,10 +1,11 @@
 <archetype>
-  <id>archetype-jan-app</id>
+  <id>archetype-jan-web</id>
   <sources>
 	<source>src/main/java/config/AppConfig.java</source>
     <source>src/main/java/action/BaseAction.java</source>
 	<source>src/main/java/service/BaseService.java</source>
 	<source>src/main/java/dao/BaseDao.java</source>
+	<source>src/main/java/dao/impl/BaseDaoImpl.java</source>
   </sources>
   <resources>
     <resource>pom.xml</resource>
