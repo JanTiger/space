@@ -1,8 +1,11 @@
 package org.jan.webapp.hms.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.aspectj.lang.annotation.AdviceName;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Import;
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * Configuration for application @Components such as @Services, @Repositories, and @Controllers.
@@ -10,8 +13,15 @@ import org.springframework.context.annotation.PropertySource;
  * @author Jan.Wang
  */
 @Configuration
-@ComponentScan(basePackages="org.jan.webapp.hms")
-@PropertySource("classpath:default.properties")
+@Aspect
 public class AppConfig {
 
+	@Pointcut("execution(* sy.service..*Impl.*(..))")
+	public void transactionPointcut(){
+		
+	}
+	
+	public void dd(){
+		
+	}
 }
