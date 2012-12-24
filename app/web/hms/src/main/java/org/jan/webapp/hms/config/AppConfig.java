@@ -1,4 +1,4 @@
-package ${package}.config;
+package org.jan.webapp.hms.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
  * @author Jan.Wang
  */
 @Configuration
-@ComponentScan(basePackages="${package}")
+@ComponentScan(basePackages="org.jan.webapp.hms")
 @PropertySource("classpath:default.properties")
 public class AppConfig {
 

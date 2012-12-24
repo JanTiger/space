@@ -1,4 +1,4 @@
-package ${package}.dao.impl;
+package org.jan.webapp.hms.dao.impl;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,10 +7,9 @@ import java.util.Map;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jan.webapp.hms.dao.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import ${package}.dao.BaseDao;
 
 /**
  * an implemention of {@link BaseDao}.

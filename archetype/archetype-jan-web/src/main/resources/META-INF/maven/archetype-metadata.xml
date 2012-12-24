@@ -30,11 +30,21 @@
         <include>**</include>
       </includes>
     </fileSet>
-	
+
 	<fileSet filtered="true" packaged="false">
       <directory>src/main/webapp</directory>
       <includes>
         <include>**</include>
+      </includes>
+	  <excludes>
+		<exclude>**/*.js</exclude>
+	  </excludes>
+    </fileSet>
+	
+	<fileSet filtered="false" packaged="false">
+      <directory>src/main/webapp</directory>
+      <includes>
+        <include>**/*.js</include>
       </includes>
     </fileSet>
 
