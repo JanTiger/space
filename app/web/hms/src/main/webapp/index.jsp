@@ -10,6 +10,6 @@
 <meta http-equiv="description" content="This is my page">
 </head>
 <body>
-	<H1>Welcome to hms!!!</H1>
+	<jsp:include page="/WEB-INF/views/main.jsp"></jsp:include>
 </body>
 </html>

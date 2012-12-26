@@ -1,8 +1,8 @@
 package org.jan.webapp.hms.config;
 
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -10,26 +10,27 @@ import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.jan.webapp.hms.exception.AppException;
 import org.jan.webapp.hms.util.Constants;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-
-
 /**
  * @author Jan.Wang
  *
  */
 @Configuration
+@EnableTransactionManagement(mode=AdviceMode.ASPECTJ)
 public class HibernateConfig {
 
     @Inject
     private StandardEnvironment environment;
-    
+
     @Bean(initMethod="init", destroyMethod="close")
     public DataSource dataSource(){
         try {
@@ -52,7 +53,7 @@ public class HibernateConfig {
 		}
         return sf.getObject();
     }
-    
+
     @Bean
     public PlatformTransactionManager transactionManager(){
     	return new HibernateTransactionManager(sessionFactory());
@@ -69,5 +70,5 @@ public class HibernateConfig {
         }
         return properties;
     }
-    
+
 }
