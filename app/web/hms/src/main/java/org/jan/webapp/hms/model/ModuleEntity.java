@@ -31,16 +31,16 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TAB_MODULE", schema = "")
-public class Module implements Serializable {
+public class ModuleEntity implements Serializable {
     private static final long serialVersionUID = 8409255999115853976L;
 
     private String id;
     private String moduleNo;
     private String name;
     private String note;
-    private Module parent;
-    private Set<Module> children = new HashSet<Module>(0);
-    private Set<ModuleBehavior> moduleBehaviors = new HashSet<ModuleBehavior>(0);
+    private ModuleEntity parent;
+    private Set<ModuleEntity> children = new HashSet<ModuleEntity>(0);
+    private Set<ModuleBehaviorEntity> moduleBehaviors = new HashSet<ModuleBehaviorEntity>(0);
 
     /**
      * @return the id
@@ -100,39 +100,39 @@ public class Module implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PID")
-    public Module getParent() {
+    public ModuleEntity getParent() {
         return parent;
     }
     /**
      * @param parent the parent to set
      */
-    public void setParent(Module parent) {
+    public void setParent(ModuleEntity parent) {
         this.parent = parent;
     }
     /**
      * @return the children
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parent")
-    public Set<Module> getChildren() {
+    public Set<ModuleEntity> getChildren() {
         return children;
     }
     /**
      * @param children the children to set
      */
-    public void setChildren(Set<Module> children) {
+    public void setChildren(Set<ModuleEntity> children) {
         this.children = children;
     }
     /**
      * @return the moduleBehaviors
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "module")
-    public Set<ModuleBehavior> getModuleBehaviors() {
+    public Set<ModuleBehaviorEntity> getModuleBehaviors() {
         return moduleBehaviors;
     }
     /**
      * @param moduleBehaviors the moduleBehaviors to set
      */
-    public void setModuleBehaviors(Set<ModuleBehavior> moduleBehaviors) {
+    public void setModuleBehaviors(Set<ModuleBehaviorEntity> moduleBehaviors) {
         this.moduleBehaviors = moduleBehaviors;
     }
 }

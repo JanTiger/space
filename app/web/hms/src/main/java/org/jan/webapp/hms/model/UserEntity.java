@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "TAB_USER", schema = "")
-public class User implements Serializable {
+public class UserEntity implements Serializable {
     private static final long serialVersionUID = 436350781326471647L;
 
     private String id;
@@ -42,19 +42,19 @@ public class User implements Serializable {
     private int active;
     private Date createDt;
     private Date lastUpdateDt;
-    private Role role;
+    private RoleEntity role;
     /**
      * @return the role
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROLE_ID", nullable = false)
-    public Role getRole() {
+    public RoleEntity getRole() {
         return role;
     }
     /**
      * @param role the role to set
      */
-    public void setRole(Role role) {
+    public void setRole(RoleEntity role) {
         this.role = role;
     }
     /**

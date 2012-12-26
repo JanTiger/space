@@ -24,7 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TAB_BEHAVIOR", schema = "")
-public class Behavior implements Serializable {
+public class BehaviorEntity implements Serializable {
     private static final long serialVersionUID = 1593468690301952050L;
 
     private String id;

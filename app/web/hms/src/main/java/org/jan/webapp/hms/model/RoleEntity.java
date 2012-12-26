@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "TAB_ROLE", schema = "")
-public class Role implements Serializable {
+public class RoleEntity implements Serializable {
     private static final long serialVersionUID = -7435536225440496923L;
 
     private String id;
@@ -41,7 +41,7 @@ public class Role implements Serializable {
     private String note;
     private int active;
     private Date lastUpdateDt;
-    private Set<User> users = new HashSet<User>(0);
+    private Set<UserEntity> users = new HashSet<UserEntity>(0);
 
     /**
      * @return the id
@@ -127,13 +127,13 @@ public class Role implements Serializable {
      * @return the users
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")
-    public Set<User> getUsers() {
+    public Set<UserEntity> getUsers() {
         return users;
     }
     /**
      * @param users the users to set
      */
-    public void setUsers(Set<User> users) {
+    public void setUsers(Set<UserEntity> users) {
         this.users = users;
     }
 }

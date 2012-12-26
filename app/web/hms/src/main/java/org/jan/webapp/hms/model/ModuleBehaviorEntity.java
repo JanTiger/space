@@ -27,12 +27,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TAB_MODULE_BEHAVIOR", schema = "")
-public class ModuleBehavior implements Serializable {
+public class ModuleBehaviorEntity implements Serializable {
     private static final long serialVersionUID = 6295456283490764363L;
 
     private String id;
-    private Module module;
-    private Behavior behavior;
+    private ModuleEntity module;
+    private BehaviorEntity behavior;
     /**
      * @return the id
      */
@@ -52,13 +52,13 @@ public class ModuleBehavior implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MODULE_NO", nullable = false)
-    public Module getModule() {
+    public ModuleEntity getModule() {
         return module;
     }
     /**
      * @param module the module to set
      */
-    public void setModule(Module module) {
+    public void setModule(ModuleEntity module) {
         this.module = module;
     }
     /**
@@ -66,13 +66,13 @@ public class ModuleBehavior implements Serializable {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BEHAVIOR_NO", nullable = false)
-    public Behavior getBehavior() {
+    public BehaviorEntity getBehavior() {
         return behavior;
     }
     /**
      * @param behavior the behavior to set
      */
-    public void setBehavior(Behavior behavior) {
+    public void setBehavior(BehaviorEntity behavior) {
         this.behavior = behavior;
     }
 
