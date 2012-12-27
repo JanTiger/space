@@ -1,4 +1,4 @@
-package org.jan.webapp.hms.pagemodel;
+package org.jan.webapp.hms.model.page;
 
 import java.io.Serializable;
 import java.util.Date;

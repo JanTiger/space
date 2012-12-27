@@ -9,7 +9,7 @@
  by Electronic Arts (EA).
 
  *************************************************************************/
-package org.jan.webapp.hms.model;
+package org.jan.webapp.hms.model.entity;
 
 import java.io.Serializable;
 
