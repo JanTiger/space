@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
  *
  * @param <T>
  */
-@Repository("baseDao")
+@Repository
 public class BaseDaoImpl<T> implements BaseDao<T> {
 
     @Autowired
@@ -39,6 +39,24 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
         if (null != params && !params.isEmpty()) {
             for (String key : params.keySet())
                 q.setParameter(key, params.get(key));
+        }
+        return q;
+    }
+
+    private Query createQuery(String hql, Object[] params) {
+        Query q = this.getCurrentSession().createQuery(hql);
+        if (null != params && params.length > 0) {
+            for (int i = 0; i < params.length; i++)
+                q.setParameter(i, params[i]);
+        }
+        return q;
+    }
+
+    private Query createQuery(String hql, List<Object> params) {
+        Query q = this.getCurrentSession().createQuery(hql);
+        if (null != params && params.size() > 0) {
+            for (int i = 0; i < params.size(); i++)
+                q.setParameter(i, params.get(i));
         }
         return q;
     }
@@ -70,7 +88,10 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
      */
     @Override
     public T get(String hql) {
-        return get(hql, null);
+        List<T> l = find(hql);
+        if(null != l && l.size() > 0)
+            return l.get(0);
+        return null;
     }
 
     /*
@@ -83,6 +104,24 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
         List<T> l = find(hql, params);
         if (null != l && l.size() > 0)
             return l.get(0);
+        return null;
+    }
+
+    @Override
+    public T get(String hql, Object[] param) {
+        List<T> l = this.find(hql, param);
+        if (l != null && l.size() > 0) {
+            return l.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public T get(String hql, List<Object> param) {
+        List<T> l = this.find(hql, param);
+        if (l != null && l.size() > 0) {
+            return l.get(0);
+        }
         return null;
     }
 
@@ -123,7 +162,7 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
      */
     @Override
     public List<T> find(String hql) {
-        return find(hql, null);
+        return this.getCurrentSession().createQuery(hql).list();
     }
 
     /*
@@ -133,6 +172,16 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
      */
     @Override
     public List<T> find(String hql, Map<String, Object> params) {
+        return createQuery(hql, params).list();
+    }
+
+    @Override
+    public List<T> find(String hql, Object[] params) {
+        return createQuery(hql, params).list();
+    }
+
+    @Override
+    public List<T> find(String hql, List<Object> params) {
         return createQuery(hql, params).list();
     }
 

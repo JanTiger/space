@@ -68,6 +68,10 @@ public interface BaseDao<T> {
      */
     public T get(String hql, Map<String, Object> params);
 
+    public T get(String hql, Object[] params);
+
+    public T get(String hql, List<Object> params);
+
     /**
      * Gets the list of objects by hql.
      *
@@ -75,6 +79,10 @@ public interface BaseDao<T> {
      * @return a list of objects
      */
     public List<T> find(String hql);
+
+    public List<T> find(String hql, Object[] param);
+
+    public List<T> find(String hql, List<Object> param);
 
     /**
      * Gets the list of objects by hql with parameters.

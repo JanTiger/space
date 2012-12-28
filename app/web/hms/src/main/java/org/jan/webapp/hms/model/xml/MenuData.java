@@ -12,10 +12,13 @@
 package org.jan.webapp.hms.model.xml;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
  * @author Jan.Wang
@@ -31,5 +34,10 @@ public class MenuData implements Serializable {
     private String url;
     @XmlAttribute(name = "iconUrl")
     private String iconUrl;
+    @XmlAttribute(name = "seq")
+    private int seq;
+    @XmlElementWrapper(name = "MenuList")
+    @XmlElement(name = "MenuData")
+    private List<MenuData> menuList;
 
 }
