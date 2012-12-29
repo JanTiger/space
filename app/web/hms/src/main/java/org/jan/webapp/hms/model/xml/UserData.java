@@ -9,25 +9,31 @@
  by Electronic Arts (EA).
 
  *************************************************************************/
-package org.jan.webapp.hms.util;
+package org.jan.webapp.hms.model.xml;
 
-import org.jan.common.utils.security.Algorithm;
-
+import java.io.Serializable;
 
 /**
  * @author Jan.Wang
  *
  */
-public final class Encrypt {
+public class UserData implements Serializable {
+    private static final long serialVersionUID = 147167540907076666L;
 
-    private Encrypt(){}
+    private String userName;
+    private String password;
 
-    public static String ep(String input){
-        return Algorithm.Coder.BASE64.encode(input);
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
     }
-
-    public static String dp(String input){
-        return Algorithm.Coder.BASE64.decoder(input);
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
     }
 
 }

@@ -18,4 +18,6 @@ public interface Constants {
 
     String SESSION_NAME_SESSION = "sessioninfo";
     String SESSION_NAME_USER = "userpagemodel";
+
+    String INITIALDATA_PATH = "initialData.xml";
 }

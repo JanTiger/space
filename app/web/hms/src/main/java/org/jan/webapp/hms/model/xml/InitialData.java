@@ -30,4 +30,14 @@ public class InitialData implements Serializable {
     @XmlElement(name = "MenuData")
     private MenuData menuData;
 
+    @XmlElement(name = "UserData")
+    private UserData userData;
+
+    /**
+     * @return the userData
+     */
+    public UserData getUserData() {
+        return userData;
+    }
+
 }

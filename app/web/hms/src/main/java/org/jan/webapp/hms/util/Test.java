@@ -11,12 +11,10 @@
  *************************************************************************/
 package org.jan.webapp.hms.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import org.jan.common.utils.xml.JAXBXmlUtils;
-import org.jan.webapp.hms.model.xml.InitialData;
+import org.jan.common.utils.security.Algorithm;
+
 
 /**
  * @author Jan.Wang
@@ -29,9 +27,10 @@ public class Test {
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-        File f = new File("E:/Jan/space/app/web/hms/src/main/resources/initialData.xml");
+        /*File f = new File("E:/Jan/space/app/web/hms/src/main/resources/initialData.xml");
         InitialData data = JAXBXmlUtils.xmlToObj(new FileInputStream(f), InitialData.class);
-        System.out.println(data);
+        System.out.println(data);*/
+        System.out.println(Algorithm.Coder.BASE64.encode("system"));;
     }
 
 }

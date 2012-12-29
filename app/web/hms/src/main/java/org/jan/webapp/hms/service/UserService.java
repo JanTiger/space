@@ -39,4 +39,6 @@ public interface UserService extends BaseService {
 
     User login(String userName, String password);
 
+    User getUserByUserName(String userName);
+
 }

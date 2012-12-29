@@ -164,4 +164,15 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.jan.webapp.hms.service.UserService#getUserByUserName(java.lang.String)
+     */
+    @Override
+    public User getUserByUserName(String userName) {
+        UserEntity userEntity = userDao.get("FROM UserEntity u where u.userName = ?", new String[]{userName});
+        if(null != userEntity)
+            return userConverter.inverse(userEntity);
+        return null;
+    }
+
 }
