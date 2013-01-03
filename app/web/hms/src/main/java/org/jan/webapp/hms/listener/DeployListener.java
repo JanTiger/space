@@ -25,6 +25,7 @@ import org.jan.webapp.hms.model.xml.UserData;
 import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Constants;
 import org.jan.webapp.hms.util.Encrypt;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * @author Jan.Wang
@@ -32,7 +33,6 @@ import org.jan.webapp.hms.util.Encrypt;
  */
 public class DeployListener implements ServletContextListener {
 
-    @Inject
     private UserService userService;
 
     /* (non-Javadoc)
@@ -49,6 +49,7 @@ public class DeployListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         InitialData data = getInitialData();
         if(null != data){
+            userService = (UserService) WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext()).getBean(UserService.class);
             repairUser(data.getUserData());
         }
     }

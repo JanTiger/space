@@ -139,6 +139,12 @@
 			<groupId>org.jan.common</groupId>
 			<artifactId>utils</artifactId>
 			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun</groupId>
+					<artifactId>rt</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 	<repositories>

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BaseDaoImpl<T> implements BaseDao<T> {
 
-    @Autowired
+    @Inject
     private SessionFactory sessionFactory;
 
     /*
