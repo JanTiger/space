@@ -13,7 +13,6 @@ package org.jan.webapp.hms.listener;
 
 import java.io.InputStream;
 
-import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -25,6 +24,7 @@ import org.jan.webapp.hms.model.xml.UserData;
 import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Constants;
 import org.jan.webapp.hms.util.Encrypt;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -59,6 +59,7 @@ public class DeployListener implements ServletContextListener {
             User user = userService.getUserByUserName(userData.getUserName());
             if(null == user){
                 user = new User();
+                user.setRoleId("-1");
                 user.setUserName(Encrypt.dp(userData.getUserName()));
                 user.setPassword(Encrypt.dp(userData.getPassword()));
                 userService.addUser(user);

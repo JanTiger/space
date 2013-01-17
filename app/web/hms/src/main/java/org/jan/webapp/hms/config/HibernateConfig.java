@@ -10,13 +10,11 @@ import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
 import org.jan.webapp.hms.exception.AppException;
 import org.jan.webapp.hms.util.Constants;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
@@ -25,7 +23,7 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
  *
  */
 @Configuration
-@EnableTransactionManagement(mode=AdviceMode.ASPECTJ)
+@EnableTransactionManagement
 public class HibernateConfig {
 
     @Inject
@@ -55,7 +53,7 @@ public class HibernateConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(){
+    public HibernateTransactionManager transactionManager(){
     	return new HibernateTransactionManager(sessionFactory());
     }
 

@@ -13,9 +13,7 @@ package org.jan.webapp.hms.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -28,6 +26,8 @@ import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Encrypt;
 import org.jan.webapp.hms.util.IDGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Jan.Wang
@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
      * @see org.jan.webapp.hms.service.UserService#addUser(org.jan.webapp.hms.model.page.User)
      */
     @Override
+    @Transactional
     public User addUser(User user) {
         user.setId(IDGenerator.create());
         Date now = new Date();
@@ -55,10 +56,8 @@ public class UserServiceImpl implements UserService {
         String roleId = user.getRoleId();
         if(null != roleId){
             RoleEntity roleEntity = roleDao.get(RoleEntity.class, roleId);
-            if(null != roleEntity){
-                userEntity.setRole(roleEntity);
-                userDao.save(userEntity);
-            }
+            userEntity.setRole(roleEntity);
+            userDao.save(userEntity);
         }
         return user;
     }
@@ -168,6 +167,7 @@ public class UserServiceImpl implements UserService {
      * @see org.jan.webapp.hms.service.UserService#getUserByUserName(java.lang.String)
      */
     @Override
+    @Transactional(readOnly=true)
     public User getUserByUserName(String userName) {
         UserEntity userEntity = userDao.get("FROM UserEntity u where u.userName = ?", new String[]{userName});
         if(null != userEntity)
