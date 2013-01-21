@@ -16,7 +16,7 @@ public interface Constants {
 
     String FORMAT_DATE_y_M_d_H_m_s = "yyyy-MM-dd HH:mm:ss";
 
-    String SESSION_NAME_SESSION = "sessioninfo";
+    String SESSION_NAME_SESSION = "sessionInfo";
     String SESSION_NAME_USER = "userpagemodel";
 
     String INITIALDATA_PATH = "initialData.xml";

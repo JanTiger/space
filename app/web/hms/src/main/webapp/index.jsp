@@ -10,6 +10,6 @@
 <meta http-equiv="description" content="This is my page">
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/main.jsp" />
+	<jsp:include page="/WEB-INF/views/login/login.jsp" />
 </body>
 </html>

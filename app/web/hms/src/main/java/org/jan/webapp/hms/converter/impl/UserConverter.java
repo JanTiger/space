@@ -60,7 +60,8 @@ public class UserConverter implements Converter<User, UserEntity> {
         user.setNote(userEntity.getNote());
         user.setPassword(Encrypt.dp(userEntity.getPassword()));
         user.setLastUpdateDt(userEntity.getLastUpdateDt());
-        user.setRoleId(userEntity.getRole().getId());
+        if(null != userEntity.getRole())
+            user.setRoleId(userEntity.getRole().getId());
         return user;
     }
 

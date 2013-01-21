@@ -1,24 +1,17 @@
-/************************************************************************
- Copyright (C) Unpublished Electronic Arts (EA) Software, Inc.
- All rights reserved. EA Software, Inc., Confidential and Proprietary.
-
- This software is subject to copyright protection
- under the laws of the Canada and other countries.
-
- Unless otherwise explicitly stated, this software is provided
- by Electronic Arts (EA).
-
- *************************************************************************/
 package org.jan.webapp.hms.action;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Result;
 import org.jan.webapp.hms.model.page.Json;
+import org.jan.webapp.hms.model.page.SessionInfo;
 import org.jan.webapp.hms.model.page.User;
 import org.jan.webapp.hms.service.UserService;
-
+import org.jan.webapp.hms.util.Constants;
+import org.jan.webapp.hms.util.IpUtil;
 
 import com.opensymphony.xwork2.ModelDriven;
 
@@ -26,6 +19,7 @@ import com.opensymphony.xwork2.ModelDriven;
  * @author Jan.Wang
  *
  */
+@Action(value = "userAction", results = {@Result(name="login", location="/WEB-INF/views/main.jsp"), @Result(name="logout", location="/index.jsp")})
 public class UserAction extends BaseAction implements ModelDriven<User> {
     private static final long serialVersionUID = 1885763494006841107L;
 
@@ -51,17 +45,21 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
         return logger;
     }
 
-    public void login() {
+    public String login() {
         Json json = new Json();
+        String location = "logout";
         User user = userService.login(userModel.getUserName(), userModel.getPassword());
         if(null != user){
             json.setMsg("用户登录成功！");
             json.setObj(user);
+            saveSessionInfo(user);
+            location = "login";
         }else{
             json.setSuccess(false);
             json.setMsg("用户名或密码错误!");
         }
         responseJson(json);
+        return location;
     }
 
     public void logout() {
@@ -69,6 +67,15 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
         if(null != session)
             session.invalidate();
         responseJson(new Json());
+    }
+
+    private void saveSessionInfo(User user){
+        SessionInfo sessionInfo = new SessionInfo();
+        sessionInfo.setUserId(user.getId());
+        sessionInfo.setLoginName(user.getUserName());
+        sessionInfo.setLoginPassword(user.getPassword());
+        sessionInfo.setIp(IpUtil.getIpAddr(getHttpServletRequest()));
+        putValueToSession(Constants.SESSION_NAME_SESSION, sessionInfo);
     }
 
 }

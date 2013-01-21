@@ -26,7 +26,6 @@ import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Encrypt;
 import org.jan.webapp.hms.util.IDGenerator;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -156,6 +155,7 @@ public class UserServiceImpl implements UserService {
      * @see org.jan.webapp.hms.service.UserService#login(java.lang.String, java.lang.String)
      */
     @Override
+    @Transactional(readOnly=true)
     public User login(String userName, String password) {
         UserEntity userEntity = userDao.get("FROM UserEntity u where u.userName = ? and u.password = ?", new String[]{userName, Encrypt.ep(password)});
         if(null != userEntity)

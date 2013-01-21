@@ -24,7 +24,6 @@ import org.jan.webapp.hms.model.xml.UserData;
 import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Constants;
 import org.jan.webapp.hms.util.Encrypt;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -56,7 +55,7 @@ public class DeployListener implements ServletContextListener {
 
     private void repairUser(UserData userData){
         if(null != userData && null != userData.getUserName()){
-            User user = userService.getUserByUserName(userData.getUserName());
+            User user = userService.getUserByUserName(Encrypt.dp(userData.getUserName()));
             if(null == user){
                 user = new User();
                 user.setRoleId("-1");
