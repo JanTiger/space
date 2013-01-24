@@ -13,11 +13,5 @@
 </head>
 <body class="easyui-layout">
 	<div data-options="region:'north',href:'/layout/north.jsp'" style="height: 60px;overflow: hidden;" class="logo"></div>
-	<div data-options="region:'west',title:'功能导航',href:'/layout/west.jsp'" style="width: 200px;overflow: hidden;"></div>
-	<div data-options="region:'center',title:'欢迎使用HMS系统',href:'/layout/center.jsp'" style="overflow: hidden;"></div>
-	<div data-options="region:'east',title:'日历',split:true" style="width: 200px;overflow: hidden;">
-		<jsp:include page="layout/east.jsp"></jsp:include>
-	</div>
-	<div data-options="region:'south',href:'/layout/south.jsp'" style="height: 27px;overflow: hidden;"></div>
 </body>
 </html>

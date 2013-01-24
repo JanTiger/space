@@ -2,13 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript" charset="utf-8">
 	function logoutFun(b) {
-		$.getJSON('${pageContext.request.contextPath}/userController/logout.action', function(result) {
+		$.getJSON('userAction!logout.action', function(result) {
 			if (b) {
 				location.replace('${pageContext.request.contextPath}/index.jsp');
 			} else {
-				$('#sessionInfoDiv').html('');
-				$('#user_login_loginDialog').dialog('open');
-				$('#layout_east_onlineDatagrid').datagrid('load', {});
+				location.replace('${pageContext.request.contextPath}/index.jsp');
+				//$('#sessionInfoDiv').html('');
+				//$('#user_login_loginDialog').dialog('open');
+				//$('#layout_east_onlineDatagrid').datagrid('load', {});
 			}
 		});
 	}
