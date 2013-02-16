@@ -50,6 +50,10 @@ public abstract class BaseAction extends ActionSupport {
         getHttpSession().setAttribute(name, value);
     }
 
+    protected final void responseError(String msg){
+        putValueToRequest(Constants.REQUEST_NAME_ERROR_MSG, msg);
+    }
+
     public void responseJson(Object obj) {
         String json = JSON.toJSONStringWithDateFormat(obj, Constants.FORMAT_DATE_y_M_d_H_m_s);
         HttpServletResponse response = getHttpServletResponse();

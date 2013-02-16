@@ -20,4 +20,6 @@ public interface Constants {
     String SESSION_NAME_USER = "userpagemodel";
 
     String INITIALDATA_PATH = "initialData.xml";
+
+    String REQUEST_NAME_ERROR_MSG = "errorMsg";
 }
