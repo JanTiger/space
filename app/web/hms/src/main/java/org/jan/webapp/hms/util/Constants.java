@@ -22,4 +22,8 @@ public interface Constants {
     String INITIALDATA_PATH = "initialData.xml";
 
     String REQUEST_NAME_ERROR_MSG = "errorMsg";
+    
+    String MSG_KEY_LOGIN_SUCCESS = "login.success";
+    String MSG_KEY_LOGIN_FAILED = "login.failed";
+    
 }
