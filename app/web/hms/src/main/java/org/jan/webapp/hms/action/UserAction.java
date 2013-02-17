@@ -56,8 +56,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
             location = "login";
         }else{
             json.setSuccess(false);
-            json.setMsg("用户名或密码错误!");
-            responseError(json.getMsg());
+            json.setMsg(this.getText(Constants.MSG_KEY_LOGIN_FAILED));
+            this.addActionError(this.getText(Constants.MSG_KEY_LOGIN_FAILED));
         }
         return location;
     }
