@@ -3,7 +3,7 @@
 	$(function() {
 
 		$('#layout_west_tree').tree({
-			url : '${pageContext.request.contextPath}/menuController/allTreeNode.action',
+			url : 'menuAction!showAllTreeNode.action',
 			parentField : 'pid',
 			lines : true,
 			onClick : function(node) {
@@ -13,7 +13,7 @@
 				} else {
 					url = '${pageContext.request.contextPath}/error/dog.jsp';
 				}
-				if (url.indexOf('druidController') > -1) {/*要查看连接池监控页面*/
+				if (url.indexOf('dataSourceAction') > -1) {
 					layout_center_addTabFun({
 						title : node.text,
 						closable : true,
@@ -61,8 +61,5 @@
 				}
 			} ]">
 		<ul id="layout_west_tree"></ul>
-	</div>
-	<div title="普通系统菜单" data-options="iconCls:'icon-reload'">
-		<jsp:include page="../easyuiDemo.jsp"></jsp:include>
 	</div>
 </div>

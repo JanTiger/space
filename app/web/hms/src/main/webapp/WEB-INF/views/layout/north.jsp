@@ -1,21 +1,12 @@
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript" charset="utf-8">
-	function logoutFun(b) {
-		$.getJSON('userAction!logout.action', function(result) {
-			if (b) {
-				location.replace('${pageContext.request.contextPath}/index.jsp');
-			} else {
-				location.replace('${pageContext.request.contextPath}/index.jsp');
-				//$('#sessionInfoDiv').html('');
-				//$('#user_login_loginDialog').dialog('open');
-				//$('#layout_east_onlineDatagrid').datagrid('load', {});
-			}
-		});
+	function logout() {
+		$.get('userAction!logout.action');
 	}
-	function userInfoFun() {
+	function showUserInfo() {
 		$('<div/>').dialog({
-			href : '${pageContext.request.contextPath}/userController/userInfo.action',
+			href : 'userAction!showUserInfo.action',
 			width : 490,
 			height : 285,
 			modal : true,
@@ -26,7 +17,7 @@
 				handler : function() {
 					var d = $(this).closest('.window-body');
 					$('#user_userInfo_form').form('submit', {
-						url : '${pageContext.request.contextPath}/userController/modifyCurrentUserPwd.action',
+						url : 'userAction!modifyCurrentUserPwd.action',
 						success : function(result) {
 							try {
 								var r = $.parseJSON(result);
@@ -68,7 +59,7 @@
 	<div onclick="changeTheme('sunny');">sunny</div>
 </div>
 <div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
-	<div onclick="userInfoFun();">个人信息</div>
+	<div onclick="showUserInfo();">个人信息</div>
 	<div class="menu-sep"></div>
 	<div>
 		<span>更换主题</span>
@@ -84,8 +75,8 @@
 	</div>
 </div>
 <div id="layout_north_zxMenu" style="width: 100px; display: none;">
-	<div onclick="logoutFun();">锁定窗口</div>
+	<div onclick="logout();">锁定窗口</div>
 	<div class="menu-sep"></div>
-	<div onclick="logoutFun();">重新登录</div>
-	<div onclick="logoutFun(true);">退出系统</div>
+	<div onclick="logout();">重新登录</div>
+	<div onclick="logout();">退出系统</div>
 </div>

@@ -101,7 +101,7 @@
 	}
 </script>
 <div id="layout_center_tabs" style="overflow: hidden;">
-	<div title="首页" data-options="href:'${pageContext.request.contextPath}/layout/portal.jsp'"></div>
+	<div title="首页" data-options="href:'WEB-INF/views/layout/portal.jsp'"></div>
 </div>
 <div id="layout_center_tabsMenu" style="width: 120px;display:none;">
 	<div type="refresh">刷新</div>

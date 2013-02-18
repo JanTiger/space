@@ -3,7 +3,7 @@
 	$(function() {
 
 		$('#layout_east_onlineDatagrid').datagrid({
-			url : '${pageContext.request.contextPath}/onlineController/datagrid.action',
+			url : 'userAction!datagrid.action',
 			title : '',
 			iconCls : '',
 			fit : true,
