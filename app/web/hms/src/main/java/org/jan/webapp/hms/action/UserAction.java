@@ -62,11 +62,23 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
         return location;
     }
 
-    public void logout() {
+    public String logout() {
         HttpSession session = getHttpSession();
         if(null != session)
             session.invalidate();
-        responseJson(new Json());
+        return "logout";
+    }
+
+    public void showUserInfo(){
+        //TODO
+    }
+
+    public void modifyCurrentUserPwd(){
+        //TODO
+    }
+
+    public void datagrid(){
+        //TODO
     }
 
     private void saveSessionInfo(User user){
