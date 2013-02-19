@@ -1,6 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <div>
-	<a href="${pageContext.request.contextPath}/init.jsp">修复异常数据<br />恢复到初始化数据库状态</a>
+	<a href="#">修复异常数据<br />恢复到初始化数据库状态</a>
 </div>
 <br />
 <br />

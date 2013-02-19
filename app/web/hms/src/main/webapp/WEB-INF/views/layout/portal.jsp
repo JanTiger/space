@@ -6,19 +6,19 @@
 			title : 'about',
 			height : 200,
 			collapsible : true,
-			href:'${pageContext.request.contextPath}/layout/portal/about.jsp'
+			href:'navigate!portal_about.action'
 		}, {
 			id : 'p2',
 			title : 'link',
 			height : 200,
 			collapsible : true,
-			href:'${pageContext.request.contextPath}/layout/portal/link.jsp'
+			href:'navigate!portal_link.action'
 		}, {
 			id : 'p3',
 			title : '修复数据库',
 			height : 200,
 			collapsible : true,
-			href:'${pageContext.request.contextPath}/layout/portal/repair.jsp'
+			href:'navigate!portal_repair.action'
 		}, {
 			id : 'p4',
 			title : '说明',
@@ -30,13 +30,13 @@
 			title : '说明2',
 			height : 200,
 			collapsible : true,
-			href:'${pageContext.request.contextPath}/layout/portal/about2.jsp'
+			href:'navigate!portal_about2.action'
 		} , {
 			id : 'p6',
 			title : 'EasyUI的QQ群',
 			height : 200,
 			collapsible : true,
-			href:'${pageContext.request.contextPath}/layout/portal/qun.jsp'
+			href:'navigate!portal_qun.action'
 		} ];
 
 		 $('#layout_portal_portal').portal({
