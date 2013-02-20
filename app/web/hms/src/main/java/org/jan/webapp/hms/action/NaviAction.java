@@ -17,7 +17,8 @@ import org.apache.struts2.convention.annotation.Result;
         , @Result(name="portal_link", location="/WEB-INF/views/layout/portal/link.jsp")
         , @Result(name="portal_repair", location="/WEB-INF/views/layout/portal/repair.jsp")
         , @Result(name="portal_about2", location="/WEB-INF/views/layout/portal/about2.jsp")
-        , @Result(name="portal_qun", location="/WEB-INF/views/layout/portal/qun.jsp")})
+        , @Result(name="portal_qun", location="/WEB-INF/views/layout/portal/qun.jsp")
+        , @Result(name="error_dog", location="/WEB-INF/views/error/dog.jsp")})
 public class NaviAction extends BaseAction {
     private static final long serialVersionUID = -1614715367657485379L;
 
@@ -69,6 +70,10 @@ public class NaviAction extends BaseAction {
 
     public String portal_qun(){
         return "portal_qun";
+    }
+
+    public String error_dog(){
+        return "error_dog";
     }
 
 }

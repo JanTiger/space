@@ -9,9 +9,9 @@
 			onClick : function(node) {
 				var url;
 				if (node.attributes.url) {
-					url = '${pageContext.request.contextPath}' + node.attributes.url;
+					url = node.attributes.url;
 				} else {
-					url = '${pageContext.request.contextPath}/error/dog.jsp';
+					url = 'navigate!error_dog.action';
 				}
 				if (url.indexOf('dataSourceAction') > -1) {
 					layout_center_addTabFun({

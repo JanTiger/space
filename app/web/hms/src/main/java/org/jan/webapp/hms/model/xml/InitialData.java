@@ -40,4 +40,11 @@ public class InitialData implements Serializable {
         return userData;
     }
 
+    /**
+     * @return the menuData
+     */
+    public MenuData getMenuData() {
+        return menuData;
+    }
+
 }

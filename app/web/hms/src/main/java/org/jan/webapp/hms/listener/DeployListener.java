@@ -12,14 +12,18 @@
 package org.jan.webapp.hms.listener;
 
 import java.io.InputStream;
+import java.util.List;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.jan.common.utils.io.IOUtils;
 import org.jan.common.utils.xml.JAXBXmlUtils;
+import org.jan.webapp.hms.cache.MenuCache;
+import org.jan.webapp.hms.model.page.Menu;
 import org.jan.webapp.hms.model.page.User;
 import org.jan.webapp.hms.model.xml.InitialData;
+import org.jan.webapp.hms.model.xml.MenuData;
 import org.jan.webapp.hms.model.xml.UserData;
 import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Constants;
@@ -50,6 +54,21 @@ public class DeployListener implements ServletContextListener {
         if(null != data){
             userService = (UserService) WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext()).getBean(UserService.class);
             repairUser(data.getUserData());
+            initMenu("-1", data.getMenuData());
+        }
+    }
+
+    private void initMenu(String pid, MenuData menuData){
+        if(null != menuData){
+            MenuCache cache = MenuCache.getInstance();
+            cache.addMenu(new Menu(pid, menuData));
+            List<MenuData> datas = menuData.getMenuList();
+            if(null != datas){
+                for(MenuData data : datas){
+                    initMenu(menuData.getId(), data);
+                }
+            }
+
         }
     }
 

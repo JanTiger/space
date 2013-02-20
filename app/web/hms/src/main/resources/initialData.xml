@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <InitialData>
-	<MenuData name="首页" url="" iconUrl="icon-tip" seq="1">
+	<MenuData id="0" name="首页" url="" iconUrl="icon-tip" seq="1">
 		<MenuList>
-			<MenuData name="系统管理" url="1" iconUrl="1" seq="1">
+			<MenuData id="1" name="系统管理" url="" iconUrl="1" seq="1">
 				<MenuList>
-					<MenuData name="用户管理" url="2" iconUrl="icon-back" seq="1" />
-					<MenuData name="角色管理" url="2" iconUrl="icon-back" seq="2" />
+					<MenuData id="11" name="用户管理" url="" iconUrl="icon-back" seq="1" />
+					<MenuData id="12" name="角色管理" url="" iconUrl="icon-back" seq="2" />
 				</MenuList>
 			</MenuData>
-			<MenuData name="连接池管理" url="3" iconUrl="2" seq="2">
+			<MenuData id="2" name="连接池管理" url="" iconUrl="2" seq="2">
 				<MenuList>
-					<MenuData name="连接池监控" url="3" iconUrl="icon-tip" seq="1" />
+					<MenuData id="21" name="连接池监控" url="dataSourceAction!druid.action" iconUrl="icon-tip" seq="1" />
 				</MenuList>
 			</MenuData>
-			<MenuData name="超级管理" url="3" iconUrl="2" seq="3">
+			<MenuData id="3" name="超级管理" url="" iconUrl="2" seq="3">
 				<MenuList>
-					<MenuData name="LOG管理" url="2" iconUrl="icon-back" seq="1" />
+					<MenuData id="31" name="LOG管理" url="" iconUrl="icon-back" seq="1" />
 				</MenuList>
 			</MenuData>
 		</MenuList>

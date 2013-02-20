@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 public class MenuData implements Serializable {
     private static final long serialVersionUID = -4288962390514021010L;
 
+    @XmlAttribute(name = "id", required = true)
+    private String id;
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlAttribute(name = "url")
@@ -39,5 +41,41 @@ public class MenuData implements Serializable {
     @XmlElementWrapper(name = "MenuList")
     @XmlElement(name = "MenuData")
     private List<MenuData> menuList;
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+    /**
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+    /**
+     * @return the iconUrl
+     */
+    public String getIconUrl() {
+        return iconUrl;
+    }
+    /**
+     * @return the seq
+     */
+    public int getSeq() {
+        return seq;
+    }
+    /**
+     * @return the menuList
+     */
+    public List<MenuData> getMenuList() {
+        return menuList;
+    }
 
 }

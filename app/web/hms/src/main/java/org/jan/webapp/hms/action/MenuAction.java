@@ -13,6 +13,7 @@ package org.jan.webapp.hms.action;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
+import org.jan.webapp.hms.cache.MenuCache;
 import org.jan.webapp.hms.model.page.Menu;
 
 import com.opensymphony.xwork2.ModelDriven;
@@ -46,7 +47,7 @@ public class MenuAction extends BaseAction implements ModelDriven<Menu> {
     }
 
     public void showAllTreeNode(){
-        //TODO
+        responseJson(MenuCache.getInstance().getMenuList());
     }
 
 }
