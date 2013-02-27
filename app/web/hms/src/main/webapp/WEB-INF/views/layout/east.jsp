@@ -3,7 +3,7 @@
 	$(function() {
 
 		$('#layout_east_onlineDatagrid').datagrid({
-			url : 'userAction!datagrid.action',
+			url : 'onlineAction!viewOnlines.action',
 			title : '',
 			iconCls : '',
 			fit : true,
@@ -13,18 +13,12 @@
 			pageList : [ 10 ],
 			nowarp : false,
 			border : false,
-			idField : 'id',
-			sortName : 'logindatetime',
+			idField : 'loginName',
+			sortName : 'loginTime',
 			sortOrder : 'desc',
-			frozenColumns : [ [ {
-				title : '编号',
-				field : 'id',
-				width : 150,
-				hidden : true
-			} ] ],
 			columns : [ [ {
 				title : '登录名',
-				field : 'loginname',
+				field : 'loginName',
 				width : 100,
 				sortable : true,
 				formatter : function(value, rowData, rowIndex) {
@@ -40,7 +34,7 @@
 				}
 			}, {
 				title : '登录时间',
-				field : 'logindatetime',
+				field : 'loginTime',
 				width : 150,
 				sortable : true,
 				formatter : function(value, rowData, rowIndex) {

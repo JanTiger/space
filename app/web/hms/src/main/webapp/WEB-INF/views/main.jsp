@@ -10,12 +10,12 @@
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="keywords" content="hms" />
 <meta http-equiv="description" content="hms" />
-<jsp:include page="head.jsp"></jsp:include>
+<s:include value="head.jsp"></s:include>
 </head>
 <body class="easyui-layout">
 	<s:div data-options="region:'north',href:'navigate!north.action'" cssStyle="height: 60px;overflow: hidden;" cssClass="logo"></s:div>
 	<s:div data-options="region:'west',title:'功能导航',href:'navigate!west.action'" cssStyle="width: 200px;overflow: hidden;"></s:div>
-	<s:div data-options="region:'center',title:'欢迎使用SyPro示例系统',href:'navigate!center.action'" cssStyle="overflow: hidden;"></s:div>
+	<s:div data-options="region:'center',title:'欢迎使用HMS系统',href:'navigate!center.action'" cssStyle="overflow: hidden;"></s:div>
 	<s:div data-options="region:'east',title:'日历',split:true" cssStyle="width: 200px;overflow: hidden;">
 		<s:include value="layout/east.jsp"></s:include>
 	</s:div>

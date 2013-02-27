@@ -61,6 +61,9 @@
 	<listener>
 		<listener-class>org.jan.webapp.hms.listener.DeployListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.jan.webapp.hms.listener.SessionListener</listener-class>
+	</listener>
 
 	<!-- druid -->
 	<servlet>
