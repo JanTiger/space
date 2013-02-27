@@ -17,8 +17,6 @@ public class User implements Serializable {
     private Date lastUpdateDt;
     private String roleId;
 
-    private String ip;
-
     /**
      * @return the id
      */

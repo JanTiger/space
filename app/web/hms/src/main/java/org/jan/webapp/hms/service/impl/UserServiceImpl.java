@@ -17,10 +17,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.jan.webapp.hms.cache.OnlineCache;
 import org.jan.webapp.hms.converter.impl.UserConverter;
 import org.jan.webapp.hms.dao.BaseDao;
 import org.jan.webapp.hms.model.entity.RoleEntity;
 import org.jan.webapp.hms.model.entity.UserEntity;
+import org.jan.webapp.hms.model.page.DataGrid;
+import org.jan.webapp.hms.model.page.Online;
 import org.jan.webapp.hms.model.page.User;
 import org.jan.webapp.hms.service.UserService;
 import org.jan.webapp.hms.util.Encrypt;
@@ -173,6 +176,38 @@ public class UserServiceImpl implements UserService {
         if(null != userEntity)
             return userConverter.inverse(userEntity);
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.jan.webapp.hms.service.UserService#getOnlines(org.jan.webapp.hms.model.page.Online)
+     */
+    @Override
+    public DataGrid<Online> getOnlines(Online online) {
+        OnlineCache cache = OnlineCache.getInstance();
+        return new DataGrid<Online>(cache.getOnlines(online), cache.size());
+    }
+
+    /* (non-Javadoc)
+     * @see org.jan.webapp.hms.service.UserService#addOnline(org.jan.webapp.hms.model.page.Online)
+     */
+    @Override
+    public void addOnline(Online online) {
+        if(null != online){
+            OnlineCache cache = OnlineCache.getInstance();
+            cache.addOnline(online);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.jan.webapp.hms.service.UserService#removeOnline(java.lang.String)
+     */
+    @Override
+    public void removeOnline(String loginName) {
+        if(null != loginName){
+            OnlineCache cache = OnlineCache.getInstance();
+            cache.removeOnline(loginName);
+        }
     }
 
 }

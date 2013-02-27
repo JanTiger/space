@@ -1,12 +1,16 @@
 package org.jan.webapp.hms.action;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
+import org.jan.common.utils.time.DateFormatUtils;
 import org.jan.webapp.hms.model.page.Json;
+import org.jan.webapp.hms.model.page.Online;
 import org.jan.webapp.hms.model.page.SessionInfo;
 import org.jan.webapp.hms.model.page.User;
 import org.jan.webapp.hms.service.UserService;
@@ -52,7 +56,8 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
         if(null != user){
             json.setMsg("用户登录成功！");
             json.setObj(user);
-            saveSessionInfo(user);
+            SessionInfo sessionInfo = saveSessionInfo(user);
+            userService.addOnline(new Online(sessionInfo.getLoginName(), DateFormatUtils.format(new Date(), Constants.FORMAT_DATE_y_M_d_H_m_s), sessionInfo.getIp()));
             location = "login";
         }else{
             json.setSuccess(false);
@@ -81,13 +86,14 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
         //TODO
     }
 
-    private void saveSessionInfo(User user){
+    private SessionInfo saveSessionInfo(User user){
         SessionInfo sessionInfo = new SessionInfo();
         sessionInfo.setUserId(user.getId());
         sessionInfo.setLoginName(user.getUserName());
         sessionInfo.setLoginPassword(user.getPassword());
         sessionInfo.setIp(IpUtil.getIpAddr(getHttpServletRequest()));
         putValueToSession(Constants.SESSION_NAME_SESSION, sessionInfo);
+        return sessionInfo;
     }
 
 }
